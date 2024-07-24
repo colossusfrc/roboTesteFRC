@@ -29,11 +29,12 @@ public final class Constants {
     }
   }
   public static class CommandConstants{
-    public static double commandPower = 0.5;
+    public static double commandPower = 0.3;
   }
   public static class TesterTranscedentals{
-    public static double powerTester = 0.1;
-    public static double distance = 2;
+    public static double powerTester = 1;
+    public static double distance = 0;
+    public static double kp = 0.1, ki = 0.0005, kd = 0;
   }
   public static class JoystickConstants{
     public static final HashMap<String, Integer> JoyButtons = new  HashMap<String, Integer>();

@@ -72,7 +72,7 @@ public class motionProfile extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Alt Encoder Velocity", encoder.getVelocity());
+    SmartDashboard.putNumber("Corrente", motorTeste.getOutputCurrent());
     SmartDashboard.putNumber("Applied Output", motorTeste.getAppliedOutput());
     SmartDashboard.putNumber("Ticks", encoder.getPosition()*encoder.getCountsPerRevolution());
   
@@ -83,7 +83,7 @@ public class motionProfile extends SubsystemBase {
 
   public void aTank(double speedLft, double speedRght){
     m_motor1Esquerdo.set(speedLft);
-    m_motor1Direito.set(-speedRght);
+    m_motor1Direito.set(speedRght);
   }
   public void stop(){
     m_motor1Esquerdo.set(0);
@@ -91,6 +91,9 @@ public class motionProfile extends SubsystemBase {
   }
   public double ticks(){
     return encoder.getPosition();
+  }
+  public void reset(){
+    encoder.setPosition(0);
   }
 
   @Override

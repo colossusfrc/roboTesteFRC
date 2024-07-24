@@ -53,8 +53,8 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btA")).onTrue(new testerCommand(m_exampleSubsystem, -TesterTranscedentals.powerTester, TesterTranscedentals.distance));
-    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).onTrue(new testerCommand(m_exampleSubsystem, TesterTranscedentals.powerTester, -TesterTranscedentals.distance)); 
+    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btA")).onTrue(new testerCommand(m_exampleSubsystem, TesterTranscedentals.powerTester, TesterTranscedentals.distance));
+    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).whileFalse(new testerCommand(m_exampleSubsystem, -TesterTranscedentals.powerTester, -TesterTranscedentals.distance)); 
    }
 
   /**
