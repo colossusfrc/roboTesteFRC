@@ -38,10 +38,12 @@ public class motorCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double powerFwd = -getJoystickFwd.get();
-    double powerTrn = -getJoystickTrn.get();
-    double powerLeft = powerFwd+powerTrn;
-    double powerRight = powerFwd-powerTrn;
+    double y = -getJoystickFwd.get();
+    double x = -getJoystickTrn.get();
+    double magnitude = Math.sqrt(y*y+x*x);
+    double angulo = Math.atan2(y, x);
+    double powerLeft = magnitude*(Math.cos(angulo)+Math.sin(angulo))/2;
+    double powerRight = magnitude*(Math.cos(angulo)-Math.sin(angulo))/2;;
     if(Math.abs(powerLeft)>CommandConstants.commandPower)powerLeft/=Math.abs(powerLeft);
     if(Math.abs(powerRight)>CommandConstants.commandPower)powerRight/=Math.abs(powerRight);
     m_subsystem.aTank(powerLeft, powerRight);
