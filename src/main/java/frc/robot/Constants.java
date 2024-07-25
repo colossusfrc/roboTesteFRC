@@ -23,8 +23,8 @@ public final class Constants {
     static{
       portas.put("porta1E", 3);
       portas.put("porta2E", 4);
-      portas.put("porta1D", 1);
-      portas.put("porta2D", 2);
+      portas.put("porta1D", 6);
+      portas.put("porta2D", 5);
       portas.put("portaTester", 8);
     }
   }
