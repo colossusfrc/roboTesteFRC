@@ -5,10 +5,10 @@
 package frc.robot;
 
 import frc.robot.Constants.JoystickConstants;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.TesterTranscedentals;
+import frc.robot.commands.intakeCommand;
 import frc.robot.commands.motorCommand;
-import frc.robot.commands.testerCommand;
+import frc.robot.subsystems.intakeSubsystem;
 import frc.robot.subsystems.motionProfile;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -24,16 +24,19 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final motionProfile m_exampleSubsystem = new motionProfile();
-  private final Joystick joystick1 = new Joystick(0);
+  //private final testerSubsystem TesterFuntionalities = new testerSubsystem();
+  private final intakeSubsystem intake = new intakeSubsystem();
+  private final Joystick joystick1 = new Joystick(JoystickConstants.joystickPort);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+      new CommandXboxController(JoystickConstants.joystickPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     m_exampleSubsystem.setDefaultCommand(new motorCommand(m_exampleSubsystem, 
     () -> joystick1.getRawAxis(JoystickConstants.JoyButtons.get("LY")), 
-    () -> joystick1.getRawAxis( JoystickConstants.JoyButtons.get("DX"))));
+    () -> joystick1.getRawAxis(JoystickConstants.JoyButtons.get("DX"))));
+    intake.setDefaultCommand(new intakeCommand(intake, 0));
     // Configure the trigger bindings
     configureBindings();
   }
@@ -53,8 +56,22 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btA")).onTrue(new testerCommand(m_exampleSubsystem, TesterTranscedentals.powerTester, TesterTranscedentals.distance));
-    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).onFalse(new testerCommand(m_exampleSubsystem, -TesterTranscedentals.powerTester, -TesterTranscedentals.distance)); 
+    /*new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btA")).onTrue(Commands.runOnce(
+                () -> {
+                  TesterFuntionalities.setGoal(TesterTranscedentals.distance);
+                  TesterFuntionalities.enable();
+                },
+                TesterFuntionalities));
+    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).onTrue(Commands.runOnce(
+                () -> {
+                  TesterFuntionalities.setGoal(-TesterTranscedentals.distance);
+                  TesterFuntionalities.enable();
+                },
+                TesterFuntionalities));*/
+    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btX")).onTrue(new intakeCommand(intake, TesterTranscedentals.powerTester));
+    
+
+   
    }
 
   /**

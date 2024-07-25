@@ -6,32 +6,24 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
- 
+import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HardwareMap;
 
-public class motionProfile extends SubsystemBase {
+public class intakeSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  private static MotorType kMotorType = MotorType.kBrushed;
-  private CANSparkMax m_motor1Esquerdo, m_motor2Esquerdo;
-  private CANSparkMax m_motor1Direito, m_motor2Direito;
+  private static MotorType kMotorType = MotorType.kBrushless;
+  private CANSparkMax iMotor1, iMotor2;
+  private RelativeEncoder encoder;
 
-  public motionProfile() {
-    m_motor1Esquerdo = new CANSparkMax(HardwareMap.portas.get("porta1E"), kMotorType);
-    m_motor1Esquerdo.restoreFactoryDefaults();
-
-    m_motor2Esquerdo = new CANSparkMax(HardwareMap.portas.get("porta2E"), kMotorType);
-    m_motor2Esquerdo.restoreFactoryDefaults();
-
-    m_motor1Direito = new CANSparkMax(HardwareMap.portas.get("porta1D"), kMotorType);
-    m_motor1Direito.restoreFactoryDefaults();
-
-    m_motor2Direito = new CANSparkMax(HardwareMap.portas.get("porta2D"), kMotorType);
-    m_motor2Direito.restoreFactoryDefaults();
-
-    m_motor2Direito.follow(m_motor1Direito);
-    m_motor2Esquerdo.follow(m_motor1Esquerdo);
+  public intakeSubsystem() {
+    iMotor1 = new CANSparkMax(HardwareMap.portas.get("portaTester"), kMotorType);
+    iMotor2 = new CANSparkMax(HardwareMap.portas.get("secIntOut"), kMotorType);
+    encoder = iMotor1.getEncoder();
+    encoder.setPosition(0);
   }
 
   /**
@@ -60,15 +52,15 @@ public class motionProfile extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Corrente", iMotor1.getOutputCurrent());
+    SmartDashboard.putNumber("Applied Output", iMotor1.getAppliedOutput());
+    SmartDashboard.putNumber("Ticks", encoder.getPosition()*encoder.getCountsPerRevolution());
   }
-
-  public void aTank(double speedLft, double speedRght){
-    m_motor1Esquerdo.set(speedLft);
-    m_motor1Direito.set(speedRght);
+  public void power1(double speed){
+    iMotor1.set(speed);
   }
-  public void stop(){
-    m_motor1Esquerdo.set(0);
-    m_motor1Direito.set(0);
+  public void power2(double speed){
+    iMotor2.set(speed);
   }
 
   @Override

@@ -6,19 +6,10 @@ package frc.robot;
 
 import java.util.HashMap;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
+
   public static class HardwareMap{
+  //mapeamento das portas
     public static final HashMap<String, Integer> portas = new HashMap<String, Integer>();
     static{
       portas.put("porta1E", 3);
@@ -26,17 +17,61 @@ public final class Constants {
       portas.put("porta1D", 1);
       portas.put("porta2D", 2);
       portas.put("portaTester", 8);
+      portas.put("secIntOut", 9);
     }
   }
   public static class CommandConstants{
-    public static double commandPower = 0.3;
+    /*
+     * Explicação:
+     * 1: potencia máxima no controlador PID
+     * 2: potencia mínima
+     * 3: raio de convergência
+     * 4: valor inicial do braço(na inicializaão do robô, imediatamente deverá ir para essa posição)
+     */
+    public static double 
+    //1
+    commandPower = 0.3, 
+    //2
+    minCommandPower = 0.05, 
+    //3
+    tolerance = 0.1,
+    //4
+    kArmOffset = 0;
   }
   public static class TesterTranscedentals{
-    public static double powerTester = 1;
-    public static double distance = 0;
-    public static double kp = 0.1, ki = 0.0005, kd = 0;
+    public static final double powerTester = 1;
+    public static final double distance = 0;
+    public static final double kp = 0.1, ki = 0.0005, kd = 0;
+    //a definir
+    public static final double 
+    /*
+     * As medidas se encontram em radianos, obrigatoriamente.
+     * Existem duas possibilidades: ou utilizamos um conversor de velocidade linear em velocidade
+     * angular ou colocamos o valor cru, pois esse é um parâmetro da classe ArmFeedFoward, que é 
+     * intrínseca aos métodos de herança nas classes que atuam com o PID (o argumento precisa estar
+     * em radianos).
+     * Explicação dos termos abaixo:
+     * 1: velocidade maxima
+     * 2: aceleração maxima
+     * 3: voltagem que impede o deslize de um braço em uma estrutura que esteja paralela ao seu movimento
+     * 4: voltagem para segurar o motor
+     * 5 e 6: conversao dos valores 1 e 2 em volts
+    1*/
+    kMaxVelocityRadPerSecond = 0, 
+  //2
+    kMaxAccelerationRadPerSecSquared = 0, 
+  //3
+    kSVolts = 0, 
+  //4
+  //Nominal Voltage: 12 V, Empirical Free Running Current: 1.8 A
+    kGVolts = 0, 
+  //5
+    kVVoltSecondPerRad = 0, 
+  //6
+    kAVoltSecondSquaredPerRad = 0;
   }
   public static class JoystickConstants{
+  //constantes do joystick
     public static final HashMap<String, Integer> JoyButtons = new  HashMap<String, Integer>();
     public static final int joystickPort = 0;
     static{
@@ -44,7 +79,9 @@ public final class Constants {
      JoyButtons.put("DX", 4);
      JoyButtons.put("DY", 5);
      JoyButtons.put("btA", 1);
-     JoyButtons.put("btY", 3);
+     JoyButtons.put("btY", 4);
+     JoyButtons.put("btB", 2);
+     JoyButtons.put("btX", 3);
     }
   }
 }

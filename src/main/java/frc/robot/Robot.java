@@ -16,39 +16,31 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  //futuramente, na organização dos comandos do autônomo, essa instância do robotcontainer vai ser mais útil
   private RobotContainer m_robotContainer;
-
   /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
+   * chama o contrutor do robotcontainer, que executa uma única vez aquelas funções de inicializaçãod o robõ
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
+    // instância de robot container, executando o construtor
     m_robotContainer = new RobotContainer();
   }
 
-  /**
-   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
-   * that you want ran during disabled, autonomous, teleoperated and test.
+  /**Executada  durante todos os modos do robô uma vez acada 30ms
    *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
+   * <p>executada uma vez depois das funções periódicas
+   * e antes das funções de leitura do dashboard.
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
+    // execução da agenda de comandos. Sem isso, nenhum comando no robô vai funcionar.
     CommandScheduler.getInstance().run();
   }
 
-  /** This function is called once each time the robot enters Disabled mode. */
+  /** Chamada uma vez depois de desabilitar */
   @Override
   public void disabledInit() {}
-
   @Override
   public void disabledPeriodic() {}
 
