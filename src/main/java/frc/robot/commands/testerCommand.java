@@ -1,65 +1,66 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
 import frc.robot.Constants.TesterTranscedentals;
-import frc.robot.subsystems.motionProfile;
+import frc.robot.subsystems.intakeSubsystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-/** An example command that uses an example subsystem. */
 public class testerCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final motionProfile m_subsystem;
+  private final intakeSubsystem m_subsystem;
   private double speed;
-  private final double distance;
+  private final double goal;
   private double errorSum;
   private double lastTime;
-  
-  public testerCommand(motionProfile subsystem, double speed, double distance) {
+  //mesmo processo em intake commando, a diferença é que speed é o limite de velocidade e distance é o alvo
+  public testerCommand(intakeSubsystem subsystem, double speed, double goal) {
     m_subsystem = subsystem;
     this.speed = speed;
-    this.distance = distance;
-    // Use addRequirements() here to declare subsystem dependencies.
+    this.goal = goal;
     addRequirements(subsystem);
   }
-
-  // Called when the command is initially scheduled.
+  /*
+   * O controlador PID:
+   * inicialmete, zeramos o termo integral para prvenir falhas de execuções anteriores do comando
+   * Lemos o primeiro valor do tempo. poderia ser colocado na primeira linha do execute(), mas acho melhor
+   * fazer uso dessa funcionalidade.
+   * posteriormente, calculamos o diferencial de tempo subtraindo o tmepo final do empo anteriormente lido.
+   * calculamos o erro assim como o diferencial de tempo
+   * atualizamos os valores no dashboard(no caso do erro, precisa ser nessa ordem, uma vez que a leitura é sequencial)
+   * somamos os retângulos da função perturbativa por uma soma de 
+   riemann grosseira (só é possível porque iniciamos com errorsum = 0)
+   * calculamos pro um controlador Ki a potência pela soam dos termos potenciais e integrais
+   * poderiamos definir um raio de convergência, zerando errorSUm se os ticks não se encontrarem nesse itnervalo
+   ou atuando o termo integral se o motor saisr do intervalo
+   * 
+  */
   @Override
   public void initialize() {
     errorSum = 0;
     lastTime = Timer.getFPGATimestamp();
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double dt = Timer.getFPGATimestamp() - lastTime;
-    double erro = distance-m_subsystem.ticks();
+    double erro = goal-m_subsystem.ticks();
     SmartDashboard.putNumber("Erro", erro);
     SmartDashboard.putNumber("Valor", m_subsystem.ticks());
     errorSum += erro*dt;
     speed = erro*TesterTranscedentals.kp + errorSum*TesterTranscedentals.ki;
     if(Math.abs(speed)>TesterTranscedentals.powerTester)speed = Math.signum(speed)*TesterTranscedentals.powerTester;
-    m_subsystem.actuateTester(-speed);
+    m_subsystem.setPower(-speed);
+    dt = Timer.getFPGATimestamp();
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    /*if(Math.signum(distance)*m_subsystem.ticks()<Math.signum(distance)*(distance)){
-    return false;
-    }else{
-      return true;
-    }*/
+
     return false;
   }
 }

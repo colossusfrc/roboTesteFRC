@@ -1,6 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
 
@@ -11,7 +8,6 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-/** An example command that uses an example subsystem. */
 public class motorCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final motionProfile m_subsystem;
@@ -19,23 +15,34 @@ public class motorCommand extends Command {
   private final Supplier<Double> getJoystickTrn;
 
   /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   *Lógica para controle do chassi tank
+   *instancia o subssitema no construtor de acordo com o parâmetro fornecido]
+   *recebe funções que serão associadas ao joystick pelo objeto Supplier, que é uma função 
+   atualizada constantemente e é muito conveniente para a sobreposição dos valores lidos nesse comando.
+   *Nenhum comando é realizado na inicialização, mas poderia.
+   *lemos os valores de x, y
+   *calculadmos a magnitude do vetor formado pelo joystick
+   *calculamos o ângulo entre o vetor e o vetor i pelas componentes do mesmo
+   *substituímos a potência dos motores por uma soma dos valores dos senos e cossenos ângulos no motor direito
+   e uma subtração no motor esquerdo, e muultiplicamos o valor pelo comprimento do vetor.
+   as condicionais de limitação são necessárias caso seja o controlador precise de uma potência menor do que 1,
+   uma vez que os valores do joystick estão contidos em um lugar geométrico caracterizado por um módulo unitário
+   na representação vetorial de suas componentes (contido em uma circunferência unitária).
+   * utilizamos a função itnerna do subssitema para mandar as potências para os motores
+   * poderíamos colocar a motencia das rodas para 0 no final do comando.
+   * poderíamos colocar uma deadband em uma função interruptiva (lemos um valor mínimo no joystick e 
+   só então executamos o comando)
    */
   public motorCommand(motionProfile subsystem, Supplier<Double> getJoystickFwd, Supplier<Double> getJoystickTrn) {
     m_subsystem = subsystem;
     this.getJoystickFwd = getJoystickFwd;
     this.getJoystickTrn = getJoystickTrn;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double y = -getJoystickFwd.get();
@@ -49,11 +56,9 @@ public class motorCommand extends Command {
     m_subsystem.aTank(powerLeft, powerRight);
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;
