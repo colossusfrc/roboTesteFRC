@@ -1,86 +1,60 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
+import frc.robot.Constants.CommandConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.TesterTranscedentals;
+import frc.robot.Constants.catchConstants;
+import frc.robot.commands.catchCommand;
 import frc.robot.commands.intakeCommand;
 import frc.robot.commands.motorCommand;
+import frc.robot.commands.testerCommand;
 import frc.robot.subsystems.intakeSubsystem;
 import frc.robot.subsystems.motionProfile;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
+ * Corpo principal do código
+ * primeiro repassamos os suppliers necessários para o comando do chassi pelas funções lambda através do joystick, 
+ * atuando o controle das rodas como o comando padrão no contrutor, que é chamado periódicamente.
+ * a função configurebindings habilita as funções declaradas nos botões (explicadas abaixo).
+ * em configurebindigns, enquanto o botao y for ativado, executa um comando que ativa o motor inferior com um delay
+ * de 2 segundos. a para a potencia simétrica.
+ * o botao x ativa o PID para a posição 1 com a potencia limite 0.3. o botao B manda para -1
+ * 
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
   private final motionProfile m_exampleSubsystem = new motionProfile();
-  //private final testerSubsystem TesterFuntionalities = new testerSubsystem();
   private final intakeSubsystem intake = new intakeSubsystem();
-  private final Joystick joystick1 = new Joystick(JoystickConstants.joystickPort);
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(JoystickConstants.joystickPort);
+  private final Joystick joystick1 = new Joystick(0);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     m_exampleSubsystem.setDefaultCommand(new motorCommand(m_exampleSubsystem, 
-    () -> joystick1.getRawAxis(JoystickConstants.JoyButtons.get("LY")), 
-    () -> joystick1.getRawAxis(JoystickConstants.JoyButtons.get("DX"))));
-    intake.setDefaultCommand(new intakeCommand(intake, 0));
-    // Configure the trigger bindings
+    () -> joystick1.getRawAxis(JoystickConstants.JoyButtons.get("LY"))*CommandConstants.commandPower, 
+    () -> joystick1.getRawAxis(JoystickConstants.JoyButtons.get("DX"))*CommandConstants.commandPower));
+    intake.setDefaultCommand(intake.brakeCommand());
+    //Habilitando os botões
     configureBindings();
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-   
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    /*new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btA")).onTrue(Commands.runOnce(
-                () -> {
-                  TesterFuntionalities.setGoal(TesterTranscedentals.distance);
-                  TesterFuntionalities.enable();
-                },
-                TesterFuntionalities));
-    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).onTrue(Commands.runOnce(
-                () -> {
-                  TesterFuntionalities.setGoal(-TesterTranscedentals.distance);
-                  TesterFuntionalities.enable();
-                },
-                TesterFuntionalities));*/
-    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btX")).onTrue(new intakeCommand(intake, TesterTranscedentals.powerTester));
-    
-
-   
-   }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  /*public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
-  }*/
+      //outtake
+    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("leftTrigger")).toggleOnTrue(
+      new intakeCommand(intake, TesterTranscedentals.lowerPowerTester, false)
+      );
+    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("rightTrigger")).toggleOnTrue(
+      new intakeCommand(intake, TesterTranscedentals.powerTester, true)
+      );
+      //intake
+    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btA")).toggleOnTrue(
+      new catchCommand(intake, catchConstants.revolutions)
+      );
+      //pid
+    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btX")).toggleOnTrue(
+      new testerCommand(intake, CommandConstants.commandPower, 10)
+      );
+    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btB")).toggleOnTrue(
+      new testerCommand(intake, CommandConstants.commandPower, -1)
+      );
+    }
 }
