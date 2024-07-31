@@ -64,7 +64,7 @@ public class testerCommand extends Command {
     m_subsystem.setPower(speed);
     lastTime = Timer.getFPGATimestamp();
     lastPos = m_subsystem.ticks();
-  }
+}
 
   @Override
   public void end(boolean interrupted) {
@@ -74,6 +74,6 @@ public class testerCommand extends Command {
 
   @Override
   public boolean isFinished() {
-      return false;
+    return false;
   }
 }

@@ -14,15 +14,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HardwareMap;
 
 public class intakeSubsystem extends SubsystemBase { 
-
   private static MotorType kMotorType = MotorType.kBrushless;
   private static IdleMode brake = IdleMode.kBrake;
   private CANSparkMax motorCima;
   private CANSparkMax motorBaixo;
   private RelativeEncoder encoder;
   //private Rev2mDistanceSensor distSens;
-  
-
   public intakeSubsystem() {
     motorCima = new CANSparkMax(HardwareMap.portas.get("intakeUp"), kMotorType);
     motorBaixo = new CANSparkMax(HardwareMap.portas.get("intakeDown"), kMotorType);
@@ -33,7 +30,6 @@ public class intakeSubsystem extends SubsystemBase {
     //distSens = new Rev2mDistanceSensor(Port.kOnboard);
     //distSens.setDistanceUnits(Unit.kMillimeters);
   }
-
   /**
    * As funções e a atualização do encoder do susbsitema de intake, nada além disso.
    * Essas outras funções podem, por agora, ser ignoradas.
@@ -55,7 +51,7 @@ public class intakeSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Corrente", motorCima.getOutputCurrent());
     SmartDashboard.putNumber("Applied Output", motorCima.getAppliedOutput());
-    SmartDashboard.putNumber("Ticks",ticks()*encoder.getCountsPerRevolution());
+    SmartDashboard.putNumber("Ticks",ticks());
     }
   public void setPower(double speed){
     motorCima.set(speed);

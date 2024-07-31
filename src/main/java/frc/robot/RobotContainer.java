@@ -8,6 +8,7 @@ import frc.robot.commands.catchCommand;
 import frc.robot.commands.intakeCommand;
 import frc.robot.commands.motorCommand;
 import frc.robot.commands.testerCommand;
+import frc.robot.commands.velocityControl;
 import frc.robot.subsystems.intakeSubsystem;
 import frc.robot.subsystems.motionProfile;
 import edu.wpi.first.wpilibj.Joystick;
@@ -27,12 +28,11 @@ public class RobotContainer {
   private final motionProfile m_exampleSubsystem = new motionProfile();
   private final intakeSubsystem intake = new intakeSubsystem();
   private final Joystick joystick1 = new Joystick(0);
-
   public RobotContainer() {
     m_exampleSubsystem.setDefaultCommand(new motorCommand(m_exampleSubsystem, 
     () -> joystick1.getRawAxis(JoystickConstants.JoyButtons.get("LY"))*CommandConstants.commandPower, 
     () -> joystick1.getRawAxis(JoystickConstants.JoyButtons.get("DX"))*CommandConstants.commandPower));
-    intake.setDefaultCommand(intake.brakeCommand());
+    //intake.setDefaultCommand(intake.brakeCommand());
     //Habilitando os botões
     configureBindings();
   }
@@ -56,5 +56,9 @@ public class RobotContainer {
     new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btB")).toggleOnTrue(
       new testerCommand(intake, CommandConstants.commandPower, -1)
       );
+      //velocityControl
+    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).onTrue(
+      new velocityControl(intake, 1)
+    );
     }
 }

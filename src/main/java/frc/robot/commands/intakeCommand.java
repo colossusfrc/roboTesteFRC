@@ -59,11 +59,9 @@ public class intakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if((Timer.getFPGATimestamp()-time)>intakeConstants.testTime){
-     //(m_subsystem.getDistance()>intakeConstants.limDistance)
-     return true;
-    }else{
-     return false;
-    }
+         //(m_subsystem.getDistance()>intakeConstants.limDistance)
+   return ((Timer.getFPGATimestamp()-time)>intakeConstants.testTime)
+   ?true
+   :false;
   }
 }

@@ -18,6 +18,12 @@ public final class Constants {//encapsulamento das constantes
       portas.put("backLeft", 4);
       portas.put("intakeUp", 6);
       portas.put("intakeDown", 5);
+      portas.put("porta1E", 3);
+      portas.put("porta2E", 4);
+      portas.put("porta1D", 6);
+      portas.put("porta2D", 5);
+      portas.put("motorCima", 8);
+      portas.put("motorBaixo", 9);
     }
   }
   //potência limite dos motores das rodas
@@ -34,12 +40,18 @@ public final class Constants {//encapsulamento das constantes
     public static final double testTime = time + .1;
     public static final double limDistance = 155.0;
   }
-  //constantes utilizadas pelo pid dos motores da coleta
+  //constantes utilizadas pelo PID de POSIÇÃO DOS MOTORES DA COLETA
   public static class TesterTranscedentals{
     public static final double powerTester = 1.0;
     public static final double lowerPowerTester = 0.4;
     public static final double distance = 0.0;
     public static final double kp = 0.05, ki = 0.023, kd = 0.0043, range = 6.0;
+  }
+  //constantes do velocityPID de VELOCIDADE DOS MOTORES DA COLETA
+  public static class velPidTranscedentals{
+    public static final double feeedFowardSpeed = 94.6;
+    public static final double MAX = 0.2;
+    public static final double kp = 0.022, ki = 0.0018, kd = 0.00018, adVel = 0.1;
   }
   //constantes dos identificadores do joystick
   public static class JoystickConstants{
