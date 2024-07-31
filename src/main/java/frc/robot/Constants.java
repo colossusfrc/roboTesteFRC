@@ -18,12 +18,6 @@ public final class Constants {//encapsulamento das constantes
       portas.put("backLeft", 4);
       portas.put("intakeUp", 6);
       portas.put("intakeDown", 5);
-      portas.put("porta1E", 3);
-      portas.put("porta2E", 4);
-      portas.put("porta1D", 6);
-      portas.put("porta2D", 5);
-      portas.put("motorCima", 8);
-      portas.put("motorBaixo", 9);
     }
   }
   //potência limite dos motores das rodas

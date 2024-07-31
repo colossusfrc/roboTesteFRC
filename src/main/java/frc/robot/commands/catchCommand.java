@@ -35,14 +35,16 @@ public class catchCommand extends Command {
      dt = Timer.getFPGATimestamp() - lastTime,
      //interferência proporcional
      erro = goal-(m_subsystem.ticks()-currPosition);
-    
     SmartDashboard.putNumber("Erro", erro);
     SmartDashboard.putNumber("Valor", m_subsystem.ticks());
      //interferência integral
     errorSum += erro*dt;
     //cálculo da potência em um instante
     speed = erro*TesterTranscedentals.kp + errorSum*TesterTranscedentals.ki;
-    speed = (Math.abs(speed)>TesterTranscedentals.powerTester) ? Math.signum(speed)*TesterTranscedentals.powerTester : speed;
+    //limitador
+    speed = (Math.abs(speed)>TesterTranscedentals.powerTester) 
+    ?Math.signum(speed)*TesterTranscedentals.powerTester 
+    :speed;
     m_subsystem.setPower(speed);
     lastTime = Timer.getFPGATimestamp();
   }
@@ -55,6 +57,8 @@ public class catchCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return (Math.abs(goal-(m_subsystem.ticks()-currPosition))<catchConstants.convergence)?true:false;
+    return (Math.abs(goal-(m_subsystem.ticks()-currPosition))<catchConstants.convergence)
+    ?true
+    :false;
   }
 }
