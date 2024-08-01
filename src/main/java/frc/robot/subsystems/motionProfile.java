@@ -2,10 +2,13 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive; 
-
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HardwareMap;
@@ -15,7 +18,8 @@ public class motionProfile extends SubsystemBase {
   private static IdleMode brake = IdleMode.kBrake;
   private CANSparkMax m_motor1Esquerdo, m_motor2Esquerdo;
   private CANSparkMax m_motor1Direito, m_motor2Direito;
-  DifferentialDrive m_drivetrain;
+  private DifferentialDrive m_drivetrain;
+  private AHRS ars;
 
   public motionProfile() {
     m_motor1Esquerdo = new CANSparkMax(HardwareMap.portas.get("frontLeft"), kMotorType);
@@ -34,6 +38,12 @@ public class motionProfile extends SubsystemBase {
     m_motor1Esquerdo.follow(m_motor2Esquerdo);
 
     m_drivetrain = new DifferentialDrive(m_motor2Esquerdo, m_motor1Direito);
+    try{
+     ars = new AHRS(SPI.Port.kMXP);
+    }catch(RuntimeException ex){
+     DriverStation.reportError("Erro ao instalar o navMXP", true);
+    }
+    ars.reset();
   }
 
   /**
@@ -52,7 +62,7 @@ public class motionProfile extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
+    SmartDashboard.putNumber("ÂNGULO:", getAngle());
   }
 
   public void arcade(double x, double y){
@@ -67,6 +77,9 @@ public class motionProfile extends SubsystemBase {
     m_motor2Direito.setIdleMode(brake);
     m_motor1Esquerdo.setIdleMode(brake);
     m_motor2Esquerdo.setIdleMode(brake);
+  }
+  public double getAngle(){
+    return ars.getAngle();
   }
 
 

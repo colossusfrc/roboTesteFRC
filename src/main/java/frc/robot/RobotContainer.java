@@ -7,8 +7,8 @@ import frc.robot.Constants.catchConstants;
 import frc.robot.commands.catchCommand;
 import frc.robot.commands.intakeCommand;
 import frc.robot.commands.motorCommand;
-import frc.robot.commands.testerCommand;
-import frc.robot.commands.velocityControl;
+//import frc.robot.commands.testerCommand;
+//import frc.robot.commands.velocityControl;
 import frc.robot.subsystems.intakeSubsystem;
 import frc.robot.subsystems.motionProfile;
 import edu.wpi.first.wpilibj.Joystick;
@@ -39,9 +39,9 @@ public class RobotContainer {
 
   private void configureBindings() {
       //outtake
-    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("leftTrigger")).toggleOnTrue(
+    /*new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("leftTrigger")).toggleOnTrue(
       new intakeCommand(intake, TesterTranscedentals.lowerPowerTester, false)
-      );
+      );*/
     new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("rightTrigger")).toggleOnTrue(
       new intakeCommand(intake, TesterTranscedentals.powerTester, true)
       );
@@ -50,7 +50,7 @@ public class RobotContainer {
       new catchCommand(intake, catchConstants.revolutions)
       );
       //pid
-    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btX")).toggleOnTrue(
+    /*new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btX")).toggleOnTrue(
       new testerCommand(intake, CommandConstants.commandPower, 10)
       );
     new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btB")).toggleOnTrue(
@@ -59,6 +59,6 @@ public class RobotContainer {
       //velocityControl
     new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).onTrue(
       new velocityControl(intake, 1)
-    );
+    );*/
     }
 }
