@@ -5,6 +5,7 @@ import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.TesterTranscedentals;
 import frc.robot.Constants.catchConstants;
 import frc.robot.commands.catchCommand;
+import frc.robot.commands.gyroCommand;
 import frc.robot.commands.intakeCommand;
 import frc.robot.commands.motorCommand;
 //import frc.robot.commands.testerCommand;
@@ -60,5 +61,8 @@ public class RobotContainer {
     new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).onTrue(
       new velocityControl(intake, 1)
     );*/
+    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).toggleOnTrue(
+      new gyroCommand(m_exampleSubsystem, 0.15, 90)
+    );
     }
 }

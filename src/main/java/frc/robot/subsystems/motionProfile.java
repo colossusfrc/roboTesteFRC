@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HardwareMap;
+import frc.robot.Constants.gyroPIDConstants;
 
 public class motionProfile extends SubsystemBase {
   private static MotorType kMotorType = MotorType.kBrushed;
@@ -63,10 +64,15 @@ public class motionProfile extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("ÂNGULO:", getAngle());
+    SmartDashboard.putNumber("Power: ", m_motor1Direito.get());
   }
 
   public void arcade(double x, double y){
    m_drivetrain.arcadeDrive(x, y, false);
+  }
+  public void tank(double left, double right){
+   m_motor2Esquerdo.set(-left);
+   m_motor1Direito.set(-right);
   }
   public void stop(){
     m_motor1Esquerdo.set(0);
@@ -79,7 +85,21 @@ public class motionProfile extends SubsystemBase {
     m_motor2Esquerdo.setIdleMode(brake);
   }
   public double getAngle(){
-    return ars.getAngle();
+    double angle;
+    angle =  ars.getAngle()+gyroPIDConstants.initialAngle;
+    if(Math.abs(angle)>360)angle -=Math.signum(angle)*360;
+    if(Math.abs(angle)>180)angle = -Math.signum(angle)*(360-Math.abs(angle));
+    return angle;
+  }
+  public double aferitiveGetAngle(double target){
+    double angle;
+    angle =  ars.getAngle()+gyroPIDConstants.initialAngle;
+    if(Math.abs(angle)>360)angle -=Math.signum(angle)*360;
+    if(Math.abs(angle)>target)angle = -Math.signum(angle)*(2*target-Math.abs(angle));
+    return angle;
+  }
+  public Command resetAngle(){
+    return this.runOnce(()->this.resetAngle());
   }
 
 

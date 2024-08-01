@@ -49,9 +49,9 @@ public class intakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Corrente", motorCima.getOutputCurrent());
+    /*SmartDashboard.putNumber("Corrente", motorCima.getOutputCurrent());
     SmartDashboard.putNumber("Applied Output", motorCima.getAppliedOutput());
-    SmartDashboard.putNumber("Ticks",ticks());
+    SmartDashboard.putNumber("Ticks",ticks());*/
     }
   public void setPower(double speed){
     motorCima.set(speed);

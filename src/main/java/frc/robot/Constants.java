@@ -31,7 +31,7 @@ public final class Constants {//encapsulamento das constantes
   }
   public static class intakeConstants{
     public static final double time = 1.0;
-    public static final double testTime = time + .1;
+    public static final double testTime = time + 1;
     public static final double limDistance = 155.0;
   }
   //constantes utilizadas pelo PID de POSIÇÃO DOS MOTORES DA COLETA
@@ -40,6 +40,12 @@ public final class Constants {//encapsulamento das constantes
     public static final double lowerPowerTester = 0.4;
     public static final double distance = 0.0;
     public static final double kp = 0.05, ki = 0.023, kd = 0.0043, range = 6.0;
+  }
+  //constantes do giroscópio
+  public static class gyroPIDConstants{
+    public static final double initialAngle = 0;
+    public static final double kp = 0.01, ki = 0.0001, kd = 0;
+    public static final double range = 10;
   }
   //constantes do velocityPID de VELOCIDADE DOS MOTORES DA COLETA
   public static class velPidTranscedentals{
