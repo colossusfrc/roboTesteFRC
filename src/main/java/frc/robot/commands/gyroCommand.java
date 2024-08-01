@@ -50,6 +50,7 @@ public class gyroCommand extends Command {
   public void execute() {
     double dt = Timer.getFPGATimestamp() - lastTime;
     double ds = m_subsystem.getAngle()-lastAngle;
+    
     double erro = targAngle-m_subsystem.getAngle();
     SmartDashboard.putNumber("Erro", erro);
     SmartDashboard.putNumber("Valor", m_subsystem.getAngle());
