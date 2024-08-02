@@ -52,6 +52,7 @@ public class gyroCommand extends Command {
     double ds = m_subsystem.getAngle()-lastAngle;
     
     double erro = targAngle-m_subsystem.getAngle();
+    erro *= (Math.abs(erro)>180)?-1:1;
     SmartDashboard.putNumber("Erro", erro);
     SmartDashboard.putNumber("Valor", m_subsystem.getAngle());
     SmartDashboard.putNumber("Alvo: ", targAngle);

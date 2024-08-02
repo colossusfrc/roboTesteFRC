@@ -87,20 +87,8 @@ public class motionProfile extends SubsystemBase {
   public double getAngle(){
     double angle;
     angle =  ars.getAngle()+gyroPIDConstants.initialAngle;
-    if(Math.abs(angle)>360)angle -=Math.signum(angle)*360;
+    if(Math.abs(angle)>360)angle -= Math.signum(angle)*360;
     if(Math.abs(angle)>180)angle = -Math.signum(angle)*(360-Math.abs(angle));
-    return angle;
-  }
-  public double enchancedAngles(double target){
-    double angle;
-    angle = ars.getAngle()+gyroPIDConstants.initialAngle;
-    if(angle>360+target){
-     angle-=360+target;
-    }else if(angle < target){
-     angle = ((360+target)-angle);
-    }
-    
-    if(angle>180+target)angle = -Math.signum(getAngle())*(360+target-Math.abs(getAngle()));
     return angle;
   }
   public Command resetAngle(){
