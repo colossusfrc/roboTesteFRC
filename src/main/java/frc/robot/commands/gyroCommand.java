@@ -16,6 +16,7 @@ public class gyroCommand extends Command {
   private double lastAngle;
   private double lastTime;
   private double derivative;
+  private double erro;
   //mesmo processo em intake commando, a diferença é que speed é o limite de velocidade e distance é o alvo
   public gyroCommand(motionProfile subsystem, double speedModule, double targAngle) {
     m_subsystem = subsystem;
@@ -40,6 +41,7 @@ public class gyroCommand extends Command {
   */
   @Override
   public void initialize() {
+    erro = 0;
     errorSum = 0;
     lastTime = Timer.getFPGATimestamp();
     derivative = 0;
@@ -49,14 +51,18 @@ public class gyroCommand extends Command {
   @Override
   public void execute() {
     double dt = Timer.getFPGATimestamp() - lastTime;
-    double ds = m_subsystem.getAngle()-lastAngle;
+    double ds = m_subsystem.getAngle() - lastAngle;
     
-    double erro = targAngle-m_subsystem.getAngle();
+    erro = targAngle-m_subsystem.getAngle();
     erro *= (Math.abs(erro)>180)?-1:1;
     SmartDashboard.putNumber("Erro", erro);
     SmartDashboard.putNumber("Valor", m_subsystem.getAngle());
     SmartDashboard.putNumber("Alvo: ", targAngle);
-    if(Math.abs(erro)<TesterTranscedentals.range)errorSum += erro*dt;
+    if(Math.abs(erro)<TesterTranscedentals.range){
+    errorSum += erro*dt;
+  }else{
+    errorSum = 0;
+  }
     derivative = ds/dt;
     speed = erro*gyroPIDConstants.kp+errorSum*gyroPIDConstants.ki+derivative*gyroPIDConstants.kd;
     if(Math.abs(speed)>speedModule)speed = 

@@ -51,7 +51,7 @@ public final class Constants {//encapsulamento das constantes
   public static class velPidTranscedentals{
     public static final double feeedFowardSpeed = 94.6;
     public static final double MAX = 0.2;
-    public static final double kp = 0.022, ki = 0.0018, kd = 0.00018, adVel = 0.1;
+    public static final double kp = 0.016, ki = 0.0019, kd = 0.00018, adVel = 0.1;
   }
   //constantes dos identificadores do joystick
   public static class JoystickConstants{

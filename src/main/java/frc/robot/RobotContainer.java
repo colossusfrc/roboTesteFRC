@@ -5,17 +5,19 @@ import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.TesterTranscedentals;
 import frc.robot.Constants.catchConstants;
 import frc.robot.commands.catchCommand;
-import frc.robot.commands.gyroCommand;
+//import frc.robot.commands.gyroCommand;
 import frc.robot.commands.intakeCommand;
 import frc.robot.commands.motorCommand;
 //import frc.robot.commands.testerCommand;
 //import frc.robot.commands.velocityControl;
 import frc.robot.subsystems.intakeSubsystem;
 import frc.robot.subsystems.motionProfile;
+//import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+//import edu.wpi.first.wpilibj2.command.button.POVButton;
 
-/**
+/*
  * Corpo principal do código
  * primeiro repassamos os suppliers necessários para o comando do chassi pelas funções lambda através do joystick, 
  * atuando o controle das rodas como o comando padrão no contrutor, que é chamado periódicamente.
@@ -29,6 +31,7 @@ public class RobotContainer {
   private final motionProfile m_exampleSubsystem = new motionProfile();
   private final intakeSubsystem intake = new intakeSubsystem();
   private final Joystick joystick1 = new Joystick(0);
+  //private final GenericHID dPad = new GenericHID(0);
   public RobotContainer() {
     m_exampleSubsystem.setDefaultCommand(new motorCommand(m_exampleSubsystem, 
     () -> joystick1.getRawAxis(JoystickConstants.JoyButtons.get("LY"))*CommandConstants.commandPower, 
@@ -61,8 +64,23 @@ public class RobotContainer {
     new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).onTrue(
       new velocityControl(intake, 1)
     );*/
-    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).toggleOnTrue(
-      new gyroCommand(m_exampleSubsystem, 0.15, 90)
+    //DESCOMENTAR PARA HABILITAR O GIROSCÓPIO
+    /* 
+    new POVButton(dPad, 0).toggleOnTrue(
+      new gyroCommand(m_exampleSubsystem, 0.2, 0)
     );
+    new POVButton(dPad, 90).toggleOnTrue(
+      new gyroCommand(m_exampleSubsystem, 0.2, -90)
+    );
+    new POVButton(dPad, 180).toggleOnTrue(
+      new gyroCommand(m_exampleSubsystem, 0.2, 180)
+    );
+    new POVButton(dPad, 270).toggleOnTrue(
+      new gyroCommand(m_exampleSubsystem, 0.2, 90)
+    );
+    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).whileTrue(
+      m_exampleSubsystem.reset()
+    );
+    */
     }
 }

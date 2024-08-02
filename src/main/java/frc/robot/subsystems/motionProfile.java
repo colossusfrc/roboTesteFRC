@@ -91,8 +91,8 @@ public class motionProfile extends SubsystemBase {
     if(Math.abs(angle)>180)angle = -Math.signum(angle)*(360-Math.abs(angle));
     return angle;
   }
-  public Command resetAngle(){
-    return this.runOnce(()->this.resetAngle());
+  public Command reset(){
+    return this.run(()->ars.reset());
   }
 
 
