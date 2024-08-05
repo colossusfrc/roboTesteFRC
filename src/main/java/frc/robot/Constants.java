@@ -22,12 +22,13 @@ public final class Constants {//encapsulamento das constantes
   }
   //potência limite dos motores das rodas
   public static class CommandConstants{
+    //modulo maximo rodas
     public static final double commandPower = 0.3;
   }
   //valores específicos do sistema de coleta
   public static class catchConstants{
     public static final double convergence = 0.01;
-    public static final double revolutions = -3.0;
+    public static final double revolutions = -3.4;
   }
   public static class intakeConstants{
     public static final double time = 1.0;

@@ -50,6 +50,7 @@ public class gyroCommand extends Command {
 
   @Override
   public void execute() {
+    m_subsystem.turnOff();
     double dt = Timer.getFPGATimestamp() - lastTime;
     double ds = m_subsystem.getAngle() - lastAngle;
     
@@ -74,6 +75,7 @@ public class gyroCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
+    m_subsystem.turnOn();
     m_subsystem.stop();
     m_subsystem.brake();
   }
