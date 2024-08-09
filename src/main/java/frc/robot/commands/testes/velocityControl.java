@@ -1,25 +1,27 @@
-package frc.robot.commands;
+package frc.robot.commands.testes;
 
-import frc.robot.Constants.TesterTranscedentals;
+import frc.robot.Constants.velPidTranscedentals;
 import frc.robot.subsystems.intakeSubsystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class testerCommand extends Command {
+public class velocityControl extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final intakeSubsystem m_subsystem;
-  private double speed;
-  private final double goal;
-  private double errorSum;
-  private double lastPos;
-  private double lastTime;
-  private double derivative;
+  private double targVel,
+   speed,
+   totalSpeed,
+   baseSpeed,
+   errorSum,
+   lastTime,
+   lastTicks,
+   v0,
+   accel;
   //mesmo processo em intake commando, a diferença é que speed é o limite de velocidade e distance é o alvo
-  public testerCommand(intakeSubsystem subsystem, double speed, double goal) {
+  public velocityControl(intakeSubsystem subsystem, double targVel) {
     m_subsystem = subsystem;
-    this.speed = speed;
-    this.goal = goal;
+    this.targVel = targVel;
     addRequirements(subsystem);
   }
   /*
@@ -39,41 +41,49 @@ public class testerCommand extends Command {
   */
   @Override
   public void initialize() {
+    baseSpeed = targVel/velPidTranscedentals.feeedFowardSpeed;
     errorSum = 0;
     lastTime = Timer.getFPGATimestamp();
-    derivative = 0;
-    lastPos = m_subsystem.ticks();
+    lastTicks = m_subsystem.ticks();
+    v0 = 0;
+    accel = 0;
   }
 
   @Override
   public void execute() {
     double dt = Timer.getFPGATimestamp() - lastTime;
-    double ds = m_subsystem.ticks()-lastPos;
-    double erro = goal-m_subsystem.ticks();
+    double ds = m_subsystem.ticks() - lastTicks;
+    double velocity = ds/dt;
+    double dv = velocity - v0;
+    accel = dv/dt;
+    double erro = targVel-velocity;
+    if(Math.abs(erro)<velPidTranscedentals.adVel)errorSum += erro*dt;
     SmartDashboard.putNumber("Erro", erro);
-    SmartDashboard.putNumber("Valor", m_subsystem.ticks());
-    SmartDashboard.putNumber("Alvo: ", goal);
-    if(Math.abs(erro)<TesterTranscedentals.range)errorSum += erro*dt;
-    derivative = ds/dt;
-    speed =
-    erro*TesterTranscedentals.kp +
-     errorSum*TesterTranscedentals.ki +
-      derivative*TesterTranscedentals.kd;
-    if(Math.abs(speed)>Math.abs(TesterTranscedentals.powerTester))speed = 
-    Math.signum(speed)*TesterTranscedentals.powerTester;
-    m_subsystem.setPower(speed);
+    SmartDashboard.putNumber("Velocidade", velocity);
+    SmartDashboard.putNumber("Alvo", targVel);
+    SmartDashboard.putNumber("Aceleração", accel);
+    speed = erro*velPidTranscedentals.kp
+     + errorSum*velPidTranscedentals.ki
+      + accel*velPidTranscedentals.kd;
+    totalSpeed = baseSpeed + speed;
+    //speed = (Math.abs(speed)>velPidTranscedentals.MAX)?Math.signum(speed)*velPidTranscedentals.MAX:(Math.abs(speed)<0.1)?Math.signum(speed)*0.1:speed;
+    if(Math.abs(totalSpeed)>velPidTranscedentals.MAX){
+      totalSpeed = Math.signum(totalSpeed)*velPidTranscedentals.MAX;
+    }
+    m_subsystem.setPower(totalSpeed);
+    //atualização dos pontos antigos
     lastTime = Timer.getFPGATimestamp();
-    lastPos = m_subsystem.ticks();
-}
+    lastTicks = m_subsystem.ticks();
+    v0 = velocity;
+  }
 
   @Override
   public void end(boolean interrupted) {
     m_subsystem.setPower(0);
-    m_subsystem.brake();
   }
 
   @Override
   public boolean isFinished() {
-    return false;
+      return false;
   }
 }

@@ -23,10 +23,9 @@ public class motionProfile extends SubsystemBase {
   private CANSparkMax m_motor1Direito, m_motor2Direito;
   private DifferentialDrive m_drivetrain;
   private AHRS ars;
-
-  NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-  NetworkTableEntry led = table.getEntry("ledMode");
-
+  private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-one");
+  private NetworkTableEntry led = table.getEntry("ledMode");
+  
   public motionProfile() {
     m_motor1Esquerdo = new CANSparkMax(HardwareMap.portas.get("frontLeft"), kMotorType);
     m_motor1Esquerdo.restoreFactoryDefaults();
@@ -68,8 +67,6 @@ public class motionProfile extends SubsystemBase {
 
   @Override
   public void periodic() {
-    /*SmartDashboard.putNumber("ÂNGULO:", getAngle());
-    SmartDashboard.putNumber("Power: ", m_motor1Direito.get());*/
   }
 
   public void arcade(double x, double y){

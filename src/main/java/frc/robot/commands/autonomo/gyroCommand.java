@@ -1,28 +1,28 @@
-package frc.robot.commands;
+package frc.robot.commands.autonomo;
 
-import frc.robot.Constants.velPidTranscedentals;
-import frc.robot.subsystems.intakeSubsystem;
+import frc.robot.Constants.TesterTranscedentals;
+import frc.robot.Constants.gyroPIDConstants;
+import frc.robot.subsystems.motionProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class velocityControl extends Command {
+public class gyroCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final intakeSubsystem m_subsystem;
-  private double targVel,
-   speed,
-   totalSpeed,
-   baseSpeed,
-   errorSum,
-   lastTime,
-   lastTicks,
-   v0,
-   accel;
+  private final motionProfile m_subsystem;
+  private double speed, speedModule;
+  private final double targAngle;
+  private double errorSum;
+  private double lastAngle;
+  private double lastTime;
+  private double derivative;
+  private double erro;
   //mesmo processo em intake commando, a diferença é que speed é o limite de velocidade e distance é o alvo
-  public velocityControl(intakeSubsystem subsystem, double targVel) {
+  public gyroCommand(motionProfile subsystem, double speedModule, double targAngle) {
     m_subsystem = subsystem;
-    this.targVel = targVel;
-    addRequirements(subsystem);
+    this.speedModule = Math.abs(speedModule);
+    this.targAngle = targAngle;
+    addRequirements(m_subsystem);
   }
   /*
    * O controlador PID:
@@ -41,49 +41,47 @@ public class velocityControl extends Command {
   */
   @Override
   public void initialize() {
-    baseSpeed = targVel/velPidTranscedentals.feeedFowardSpeed;
+    erro = 0;
     errorSum = 0;
     lastTime = Timer.getFPGATimestamp();
-    lastTicks = m_subsystem.ticks();
-    v0 = 0;
-    accel = 0;
+    derivative = 0;
+    lastAngle = m_subsystem.getAngle();
   }
 
   @Override
   public void execute() {
+    m_subsystem.turnOff();
     double dt = Timer.getFPGATimestamp() - lastTime;
-    double ds = m_subsystem.ticks() - lastTicks;
-    double velocity = ds/dt;
-    double dv = velocity - v0;
-    accel = dv/dt;
-    double erro = targVel-velocity;
-    if(Math.abs(erro)<velPidTranscedentals.adVel)errorSum += erro*dt;
+    double ds = m_subsystem.getAngle() - lastAngle;
+    
+    erro = targAngle-m_subsystem.getAngle();
+    erro *= (Math.abs(erro)>180)?-1:1;
     SmartDashboard.putNumber("Erro", erro);
-    SmartDashboard.putNumber("Velocidade", velocity);
-    SmartDashboard.putNumber("Alvo", targVel);
-    SmartDashboard.putNumber("Aceleração", accel);
-    speed = erro*velPidTranscedentals.kp
-     + errorSum*velPidTranscedentals.ki
-      + accel*velPidTranscedentals.kd;
-    totalSpeed = baseSpeed + speed;
-    //speed = (Math.abs(speed)>velPidTranscedentals.MAX)?Math.signum(speed)*velPidTranscedentals.MAX:(Math.abs(speed)<0.1)?Math.signum(speed)*0.1:speed;
-    if(Math.abs(totalSpeed)>velPidTranscedentals.MAX){
-      totalSpeed = Math.signum(totalSpeed)*velPidTranscedentals.MAX;
-    }
-    m_subsystem.setPower(totalSpeed);
-    //atualização dos pontos antigos
-    lastTime = Timer.getFPGATimestamp();
-    lastTicks = m_subsystem.ticks();
-    v0 = velocity;
+    SmartDashboard.putNumber("Valor", m_subsystem.getAngle());
+    SmartDashboard.putNumber("Alvo: ", targAngle);
+    if(Math.abs(erro)<TesterTranscedentals.range){
+    errorSum += erro*dt;
+  }else{
+    errorSum = 0;
   }
+    derivative = ds/dt;
+    speed = erro*gyroPIDConstants.kp+errorSum*gyroPIDConstants.ki+derivative*gyroPIDConstants.kd;
+    if(Math.abs(speed)>speedModule)speed = 
+    Math.signum(speed)*speedModule;
+    m_subsystem.tank(speed, speed);
+    lastTime = Timer.getFPGATimestamp();
+    lastAngle = m_subsystem.getAngle();
+}
 
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.setPower(0);
+    m_subsystem.turnOn();
+    m_subsystem.stop();
+    m_subsystem.brake();
   }
 
   @Override
   public boolean isFinished() {
-      return false;
+    return false;
   }
 }

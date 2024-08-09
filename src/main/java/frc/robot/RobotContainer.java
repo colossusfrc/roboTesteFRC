@@ -4,10 +4,9 @@ import frc.robot.Constants.CommandConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.TesterTranscedentals;
 import frc.robot.Constants.catchConstants;
-import frc.robot.commands.catchCommand;
-//import frc.robot.commands.gyroCommand;
-import frc.robot.commands.intakeCommand;
-import frc.robot.commands.motorCommand;
+import frc.robot.commands.teleoperado.catchCommand;
+import frc.robot.commands.teleoperado.intakeCommand;
+import frc.robot.commands.teleoperado.motorCommand;
 //import frc.robot.commands.testerCommand;
 //import frc.robot.commands.velocityControl;
 import frc.robot.subsystems.intakeSubsystem;
@@ -35,7 +34,7 @@ public class RobotContainer {
   public RobotContainer() {
     m_exampleSubsystem.setDefaultCommand(new motorCommand(m_exampleSubsystem, 
     () -> joystick1.getRawAxis(JoystickConstants.JoyButtons.get("LY"))*CommandConstants.commandPower, 
-    () -> joystick1.getRawAxis(JoystickConstants.JoyButtons.get("DX"))*CommandConstants.commandPower));
+    () -> joystick1.getRawAxis(JoystickConstants.JoyButtons.get("DX"))*CommandConstants.spinSpeed));
     //intake.setDefaultCommand(intake.brakeCommand());
     //Habilitando os botões
     configureBindings();
@@ -65,8 +64,8 @@ public class RobotContainer {
       new velocityControl(intake, 1)
     );*/
     //DESCOMENTAR PARA HABILITAR O GIROSCÓPIO
-    /* 
-    new POVButton(dPad, 0).toggleOnTrue(
+    
+    /*new POVButton(dPad, 0).toggleOnTrue(
       new gyroCommand(m_exampleSubsystem, 0.2, 0)
     );
     new POVButton(dPad, 90).toggleOnTrue(
@@ -80,7 +79,7 @@ public class RobotContainer {
     );
     new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).whileTrue(
       m_exampleSubsystem.reset()
-    );
-    */
+    );*/
+    
     }
 }

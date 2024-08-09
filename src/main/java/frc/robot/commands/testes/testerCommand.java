@@ -1,28 +1,26 @@
-package frc.robot.commands;
+package frc.robot.commands.testes;
 
 import frc.robot.Constants.TesterTranscedentals;
-import frc.robot.Constants.gyroPIDConstants;
-import frc.robot.subsystems.motionProfile;
+import frc.robot.subsystems.intakeSubsystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class gyroCommand extends Command {
+public class testerCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final motionProfile m_subsystem;
-  private double speed, speedModule;
-  private final double targAngle;
+  private final intakeSubsystem m_subsystem;
+  private double speed;
+  private final double goal;
   private double errorSum;
-  private double lastAngle;
+  private double lastPos;
   private double lastTime;
   private double derivative;
-  private double erro;
   //mesmo processo em intake commando, a diferença é que speed é o limite de velocidade e distance é o alvo
-  public gyroCommand(motionProfile subsystem, double speedModule, double targAngle) {
+  public testerCommand(intakeSubsystem subsystem, double speed, double goal) {
     m_subsystem = subsystem;
-    this.speedModule = Math.abs(speedModule);
-    this.targAngle = targAngle;
-    addRequirements(m_subsystem);
+    this.speed = speed;
+    this.goal = goal;
+    addRequirements(subsystem);
   }
   /*
    * O controlador PID:
@@ -41,42 +39,36 @@ public class gyroCommand extends Command {
   */
   @Override
   public void initialize() {
-    erro = 0;
     errorSum = 0;
     lastTime = Timer.getFPGATimestamp();
     derivative = 0;
-    lastAngle = m_subsystem.getAngle();
+    lastPos = m_subsystem.ticks();
   }
 
   @Override
   public void execute() {
-    m_subsystem.turnOff();
     double dt = Timer.getFPGATimestamp() - lastTime;
-    double ds = m_subsystem.getAngle() - lastAngle;
-    
-    erro = targAngle-m_subsystem.getAngle();
-    erro *= (Math.abs(erro)>180)?-1:1;
+    double ds = m_subsystem.ticks()-lastPos;
+    double erro = goal-m_subsystem.ticks();
     SmartDashboard.putNumber("Erro", erro);
-    SmartDashboard.putNumber("Valor", m_subsystem.getAngle());
-    SmartDashboard.putNumber("Alvo: ", targAngle);
-    if(Math.abs(erro)<TesterTranscedentals.range){
-    errorSum += erro*dt;
-  }else{
-    errorSum = 0;
-  }
+    SmartDashboard.putNumber("Valor", m_subsystem.ticks());
+    SmartDashboard.putNumber("Alvo: ", goal);
+    if(Math.abs(erro)<TesterTranscedentals.range)errorSum += erro*dt;
     derivative = ds/dt;
-    speed = erro*gyroPIDConstants.kp+errorSum*gyroPIDConstants.ki+derivative*gyroPIDConstants.kd;
-    if(Math.abs(speed)>speedModule)speed = 
-    Math.signum(speed)*speedModule;
-    m_subsystem.tank(speed, speed);
+    speed =
+    erro*TesterTranscedentals.kp +
+     errorSum*TesterTranscedentals.ki +
+      derivative*TesterTranscedentals.kd;
+    if(Math.abs(speed)>Math.abs(TesterTranscedentals.powerTester))speed = 
+    Math.signum(speed)*TesterTranscedentals.powerTester;
+    m_subsystem.setPower(speed);
     lastTime = Timer.getFPGATimestamp();
-    lastAngle = m_subsystem.getAngle();
+    lastPos = m_subsystem.ticks();
 }
 
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.turnOn();
-    m_subsystem.stop();
+    m_subsystem.setPower(0);
     m_subsystem.brake();
   }
 

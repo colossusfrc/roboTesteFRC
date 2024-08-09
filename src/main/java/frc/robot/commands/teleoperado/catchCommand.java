@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.teleoperado;
 
 import frc.robot.Constants.TesterTranscedentals;
 import frc.robot.Constants.catchConstants;

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.AbsoluteEncoder;
 //import com.revrobotics.Rev2mDistanceSensor.Unit;
 //import com.revrobotics.Rev2mDistanceSensor.Port;
 import com.revrobotics.CANSparkMax;

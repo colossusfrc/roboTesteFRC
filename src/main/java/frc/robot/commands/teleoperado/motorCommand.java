@@ -1,5 +1,5 @@
 
-package frc.robot.commands;
+package frc.robot.commands.teleoperado;
 
 import frc.robot.subsystems.motionProfile;
 import java.util.function.Supplier;
@@ -51,11 +51,16 @@ public class motorCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
+    m_subsystem.arcade(0, 0);
     m_subsystem.brake();
   }
 
   @Override
   public boolean isFinished() {
-    return false;
-  }
+    if(Math.abs(getJoystickFwd.get())<0.05&&Math.abs(getJoystickTrn.get())<0.05){
+      return true;
+   }else{
+      return false;
+   }
+ }
 }

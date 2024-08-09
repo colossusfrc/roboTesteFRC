@@ -4,10 +4,6 @@ import java.util.HashMap;
 
 
 public final class Constants {//encapsulamento das constantes
-  //eventualmente terá uso
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
   //relaciona a identificação do hardware com a conexão 
   public static class HardwareMap{
     public static final HashMap<String, Integer> portas = new HashMap<String, Integer>();
@@ -23,7 +19,9 @@ public final class Constants {//encapsulamento das constantes
   //potência limite dos motores das rodas
   public static class CommandConstants{
     //modulo maximo rodas
-    public static final double commandPower = 0.3;
+    public static final double 
+     commandPower = 0.3,
+     spinSpeed = commandPower/1.5;
   }
   //valores específicos do sistema de coleta
   public static class catchConstants{
