@@ -68,4 +68,17 @@ public final class Constants {//encapsulamento das constantes
      JoyButtons.put("rightTrigger", 6);
     }
   }
+  //constatnes da limelight
+  public static class limelightConstants{
+    public static final String name = "limelight-one";
+    public static final double kp = 1, ki = 0.18, kd = 0.0;
+    public static final double kpz = 0.039, kiz = 0.014, kdz = 0.0;
+    public static final double ry = 0.5, rz = 5;
+  }
+  public static class tagConstants{
+  //A medida está em centímetros
+    public static final double hf = 118,
+    hCam = 53;
+    public static final double dH = hf - hCam;
+  }
 }

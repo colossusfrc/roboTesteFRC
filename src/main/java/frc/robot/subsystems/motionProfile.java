@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HardwareMap;
@@ -67,14 +68,16 @@ public class motionProfile extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Angulo",getAngle());
   }
-
+  public void setMaxOUtput(double max){
+   m_drivetrain.setMaxOutput(max);
+  }
   public void arcade(double x, double y){
    m_drivetrain.arcadeDrive(x, y, false);
   }
   public void tank(double left, double right){
-   m_motor2Esquerdo.set(-left);
-   m_motor1Direito.set(-right);
+   m_drivetrain.tankDrive(left, -right);
   }
   public void stop(){
     m_motor1Esquerdo.set(0);

@@ -4,9 +4,11 @@ import frc.robot.Constants.CommandConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.TesterTranscedentals;
 import frc.robot.Constants.catchConstants;
+import frc.robot.commands.autonomo.BiaxialPID;
 import frc.robot.commands.teleoperado.catchCommand;
 import frc.robot.commands.teleoperado.intakeCommand;
 import frc.robot.commands.teleoperado.motorCommand;
+import frc.robot.subsystems.LimelightSubsystem;
 //import frc.robot.commands.testerCommand;
 //import frc.robot.commands.velocityControl;
 import frc.robot.subsystems.intakeSubsystem;
@@ -27,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * 
  */
 public class RobotContainer {
+  private final LimelightSubsystem limelight = new LimelightSubsystem();
   private final motionProfile m_exampleSubsystem = new motionProfile();
   private final intakeSubsystem intake = new intakeSubsystem();
   private final Joystick joystick1 = new Joystick(0);
@@ -77,9 +80,14 @@ public class RobotContainer {
     new POVButton(dPad, 270).toggleOnTrue(
       new gyroCommand(m_exampleSubsystem, 0.2, 90)
     );
-    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).whileTrue(
+    */
+    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btX")).whileTrue(
       m_exampleSubsystem.reset()
-    );*/
+    );
+    //limelight
+    new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).toggleOnTrue(
+      new BiaxialPID(limelight, m_exampleSubsystem, 0.3, 2.5, 0)
+    );
     
     }
 }
