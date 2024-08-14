@@ -43,14 +43,16 @@ public final class Constants {//encapsulamento das constantes
   //constantes do giroscópio
   public static class gyroPIDConstants{
     public static final double initialAngle = 0;
-    public static final double kp = 0.01, ki = 0.0001, kd = 0;
+    public static final double kp = 0.0415, ki = 0.068, kd = 1.54;
     public static final double range = 10;
   }
   //constantes do velocityPID de VELOCIDADE DOS MOTORES DA COLETA
   public static class velPidTranscedentals{
     public static final double feeedFowardSpeed = 94.6;
+    public static final double wheelRad = 0.04,
+    scaleConversion = wheelRad*2*Math.PI;
     public static final double MAX = 0.2;
-    public static final double kp = 0.016, ki = 0.0019, kd = 0.00018, adVel = 0.1;
+    public static final double kp = 0.016, ki = 0.0, kd = 0.0, adVel = 0.1;
   }
   //constantes dos identificadores do joystick
   public static class JoystickConstants{
@@ -71,9 +73,9 @@ public final class Constants {//encapsulamento das constantes
   //constatnes da limelight
   public static class limelightConstants{
     public static final String name = "limelight-one";
-    public static final double kp = 1, ki = 0.18, kd = 0.0;
-    public static final double kpz = 0.039, kiz = 0.014, kdz = 0.0;
-    public static final double ry = 0.5, rz = 5;
+    public static final double kp = 1, ki = 0.4, kd = 0.0;
+    public static final double kpz = 0.07, kiz = 0.046, kdz = 0.0064;
+    public static final double ry = 0.1, rz = 1;
   }
   public static class tagConstants{
   //A medida está em centímetros

@@ -4,10 +4,6 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
-
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -24,8 +20,6 @@ public class motionProfile extends SubsystemBase {
   private CANSparkMax m_motor1Direito, m_motor2Direito;
   private DifferentialDrive m_drivetrain;
   private AHRS ars;
-  private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-one");
-  private NetworkTableEntry led = table.getEntry("ledMode");
   
   public motionProfile() {
     m_motor1Esquerdo = new CANSparkMax(HardwareMap.portas.get("frontLeft"), kMotorType);
@@ -56,9 +50,10 @@ public class motionProfile extends SubsystemBase {
    *  Inicialização do susbsitema do chassi  e suas funções de controle.
    *  As outras funções podem ser ignoradas.
    */
-  public Command exampleMethodCommand() {
+  public Command resetOnce() {
     return runOnce(
         () -> {
+          ars.reset();
         });
   }
 
@@ -76,9 +71,6 @@ public class motionProfile extends SubsystemBase {
   public void arcade(double x, double y){
    m_drivetrain.arcadeDrive(x, y, false);
   }
-  public void tank(double left, double right){
-   m_drivetrain.tankDrive(left, -right);
-  }
   public void stop(){
     m_motor1Esquerdo.set(0);
     m_motor1Direito.set(0);
@@ -95,19 +87,6 @@ public class motionProfile extends SubsystemBase {
     if(Math.abs(angle)>360)angle -= Math.signum(angle)*360;
     if(Math.abs(angle)>180)angle = -Math.signum(angle)*(360-Math.abs(angle));
     return angle;
-  }
-  public Command reset(){
-    return this.run(()->ars.reset());
-  }
-
-  public void turnOn(){
-    led.setNumber(3);
-  }
-  public void turnOff(){
-    led.setNumber(1);
-  }
-  public void blink(){
-    led.setNumber(2);
   }
   @Override
   public void simulationPeriodic() {

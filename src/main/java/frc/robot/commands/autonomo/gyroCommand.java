@@ -1,24 +1,23 @@
 package frc.robot.commands.autonomo;
 
-import frc.robot.Constants.TesterTranscedentals;
 import frc.robot.Constants.gyroPIDConstants;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.motionProfile;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class gyroCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final motionProfile m_subsystem;
+  private final LimelightSubsystem limelight;
+  private final PIDController gyroPID;
   private double speed, speedModule;
   private final double targAngle;
-  private double errorSum;
-  private double lastAngle;
-  private double lastTime;
-  private double derivative;
-  private double erro;
   //mesmo processo em intake commando, a diferença é que speed é o limite de velocidade e distance é o alvo
-  public gyroCommand(motionProfile subsystem, double speedModule, double targAngle) {
+  public gyroCommand(motionProfile subsystem, LimelightSubsystem limelight, double speedModule, double targAngle) {
+    this.limelight = limelight;
+    gyroPID = new PIDController(gyroPIDConstants.kp, gyroPIDConstants.ki, gyroPIDConstants.kd);
     m_subsystem = subsystem;
     this.speedModule = Math.abs(speedModule);
     this.targAngle = targAngle;
@@ -41,41 +40,33 @@ public class gyroCommand extends Command {
   */
   @Override
   public void initialize() {
-    erro = 0;
-    errorSum = 0;
-    lastTime = Timer.getFPGATimestamp();
-    derivative = 0;
-    lastAngle = m_subsystem.getAngle();
+    gyroPID.enableContinuousInput(-180, 180);
+    gyroPID.reset();
+    speed = 0;
+    m_subsystem.setMaxOUtput(speedModule);
   }
 
   @Override
   public void execute() {
-    m_subsystem.turnOff();
-    double dt = Timer.getFPGATimestamp() - lastTime;
-    double ds = m_subsystem.getAngle() - lastAngle;
-    
-    erro = targAngle-m_subsystem.getAngle();
-    erro *= (Math.abs(erro)>180)?-1:1;
-    SmartDashboard.putNumber("Erro", erro);
-    SmartDashboard.putNumber("Valor", m_subsystem.getAngle());
-    SmartDashboard.putNumber("Alvo: ", targAngle);
-    if(Math.abs(erro)<TesterTranscedentals.range){
-    errorSum += erro*dt;
-  }else{
-    errorSum = 0;
-  }
-    derivative = ds/dt;
-    speed = erro*gyroPIDConstants.kp+errorSum*gyroPIDConstants.ki+derivative*gyroPIDConstants.kd;
-    if(Math.abs(speed)>speedModule)speed = 
-    Math.signum(speed)*speedModule;
-    m_subsystem.tank(speed, speed);
-    lastTime = Timer.getFPGATimestamp();
-    lastAngle = m_subsystem.getAngle();
+    //limelight.blink();
+    gyroPID.calculate(m_subsystem.getAngle(), targAngle);
+    if(Math.abs(gyroPID.getPositionError())>gyroPIDConstants.range||Math.abs(gyroPID.getPositionError())<gyroPIDConstants.range/10){
+      gyroPID.setI(0);
+      speed = gyroPID.calculate(m_subsystem.getAngle(), targAngle);
+    }else{
+      gyroPID.setI(gyroPIDConstants.ki);
+      speed = gyroPID.calculate(m_subsystem.getAngle(), targAngle);
+    }
+    SmartDashboard.putNumber("erro", gyroPID.getPositionError());
+    SmartDashboard.putNumber("Integral: ", gyroPID.getI());
+    SmartDashboard.putNumber("Derivativo: ", gyroPID.getD());
+    m_subsystem.arcade(-speed, 0);
 }
 
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.turnOn();
+    //limelight.turnOn();
+    m_subsystem.setMaxOUtput(1);
     m_subsystem.stop();
     m_subsystem.brake();
   }

@@ -3,7 +3,6 @@ package frc.robot.commands.testes;
 import frc.robot.Constants.TesterTranscedentals;
 import frc.robot.subsystems.intakeSubsystem;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class testerCommand extends Command {
@@ -50,9 +49,6 @@ public class testerCommand extends Command {
     double dt = Timer.getFPGATimestamp() - lastTime;
     double ds = m_subsystem.ticks()-lastPos;
     double erro = goal-m_subsystem.ticks();
-    SmartDashboard.putNumber("Erro", erro);
-    SmartDashboard.putNumber("Valor", m_subsystem.ticks());
-    SmartDashboard.putNumber("Alvo: ", goal);
     if(Math.abs(erro)<TesterTranscedentals.range)errorSum += erro*dt;
     derivative = ds/dt;
     speed =

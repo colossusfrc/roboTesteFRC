@@ -54,6 +54,7 @@ public class BiaxialPID extends Command {
   @Override
   public void end(boolean interrupted) {
    motores.arcade(0, 0);
+   motores.brake();
    motores.setMaxOUtput(1);
   }
 

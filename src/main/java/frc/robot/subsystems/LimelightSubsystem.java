@@ -17,9 +17,11 @@ import frc.robot.Constants.tagConstants;
 public class LimelightSubsystem extends SubsystemBase {
   private NetworkTable table;
   private NetworkTableEntry tx, ty;
+  private NetworkTableEntry led;
 
   public LimelightSubsystem() {
     table = NetworkTableInstance.getDefault().getTable("limelight-one");
+    led = table.getEntry("ledMode");
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
   }
@@ -90,5 +92,14 @@ public class LimelightSubsystem extends SubsystemBase {
       Math.pow(getX(), 2)+Math.pow(getY(), 2)+Math.pow(getZ(), 2)
       );
     return range;
+  }
+  public void turnOn(){
+    led.setNumber(3);
+  }
+  public void turnOff(){
+    led.setNumber(1);
+  }
+  public void blink(){
+    led.setNumber(2);
   }
 }

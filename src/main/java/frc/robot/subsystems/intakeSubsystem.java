@@ -12,6 +12,7 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HardwareMap;
+import frc.robot.Constants.velPidTranscedentals;
 
 public class intakeSubsystem extends SubsystemBase { 
   private static MotorType kMotorType = MotorType.kBrushless;
@@ -68,6 +69,9 @@ public class intakeSubsystem extends SubsystemBase {
   }
   public double ticks(){
     return encoder.getPosition();
+  }
+  public double getVelocityMPS(){
+    return encoder.getVelocity()*velPidTranscedentals.scaleConversion/60;
   }
   public void brake(){
     motorBaixo.setIdleMode(brake);

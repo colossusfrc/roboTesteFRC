@@ -2,25 +2,21 @@ package frc.robot.commands.testes;
 
 import frc.robot.Constants.velPidTranscedentals;
 import frc.robot.subsystems.intakeSubsystem;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class velocityControl extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final intakeSubsystem m_subsystem;
+  private final PIDController velPID;
   private double targVel,
-   speed,
-   totalSpeed,
    baseSpeed,
-   errorSum,
-   lastTime,
-   lastTicks,
-   v0,
-   accel;
+   power;
   //mesmo processo em intake commando, a diferença é que speed é o limite de velocidade e distance é o alvo
   public velocityControl(intakeSubsystem subsystem, double targVel) {
     m_subsystem = subsystem;
+    this.velPID = new PIDController(velPidTranscedentals.kp, velPidTranscedentals.ki, velPidTranscedentals.kd);
     this.targVel = targVel;
     addRequirements(subsystem);
   }
@@ -42,39 +38,17 @@ public class velocityControl extends Command {
   @Override
   public void initialize() {
     baseSpeed = targVel/velPidTranscedentals.feeedFowardSpeed;
-    errorSum = 0;
-    lastTime = Timer.getFPGATimestamp();
-    lastTicks = m_subsystem.ticks();
-    v0 = 0;
-    accel = 0;
+    velPID.reset();
+    power = 0;
   }
 
   @Override
   public void execute() {
-    double dt = Timer.getFPGATimestamp() - lastTime;
-    double ds = m_subsystem.ticks() - lastTicks;
-    double velocity = ds/dt;
-    double dv = velocity - v0;
-    accel = dv/dt;
-    double erro = targVel-velocity;
-    if(Math.abs(erro)<velPidTranscedentals.adVel)errorSum += erro*dt;
-    SmartDashboard.putNumber("Erro", erro);
-    SmartDashboard.putNumber("Velocidade", velocity);
-    SmartDashboard.putNumber("Alvo", targVel);
-    SmartDashboard.putNumber("Aceleração", accel);
-    speed = erro*velPidTranscedentals.kp
-     + errorSum*velPidTranscedentals.ki
-      + accel*velPidTranscedentals.kd;
-    totalSpeed = baseSpeed + speed;
-    //speed = (Math.abs(speed)>velPidTranscedentals.MAX)?Math.signum(speed)*velPidTranscedentals.MAX:(Math.abs(speed)<0.1)?Math.signum(speed)*0.1:speed;
-    if(Math.abs(totalSpeed)>velPidTranscedentals.MAX){
-      totalSpeed = Math.signum(totalSpeed)*velPidTranscedentals.MAX;
-    }
-    m_subsystem.setPower(totalSpeed);
-    //atualização dos pontos antigos
-    lastTime = Timer.getFPGATimestamp();
-    lastTicks = m_subsystem.ticks();
-    v0 = velocity;
+   double PIDPower = velPID.calculate(m_subsystem.getVelocityMPS(), targVel);
+   power = baseSpeed+PIDPower;
+   power = (Math.abs(power)>velPidTranscedentals.MAX)?Math.signum(power)*velPidTranscedentals.MAX:power;
+   m_subsystem.setPower(power);
+   SmartDashboard.putNumber("velocityError", velPID.getPositionError());
   }
 
   @Override

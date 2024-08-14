@@ -4,7 +4,6 @@ import frc.robot.Constants.TesterTranscedentals;
 import frc.robot.Constants.catchConstants;
 import frc.robot.subsystems.intakeSubsystem;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class catchCommand extends Command {
@@ -35,8 +34,6 @@ public class catchCommand extends Command {
      dt = Timer.getFPGATimestamp() - lastTime,
      //interferência proporcional
      erro = goal-(m_subsystem.ticks()-currPosition);
-    SmartDashboard.putNumber("Erro", erro);
-    SmartDashboard.putNumber("Valor", m_subsystem.ticks());
      //interferência integral
     errorSum += erro*dt;
     //cálculo da potência em um instante

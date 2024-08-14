@@ -3,7 +3,6 @@ package frc.robot.commands.autonomo;
 import frc.robot.Constants.limelightConstants;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.motionProfile;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class FrontalPID extends Command {
@@ -42,8 +41,6 @@ public class FrontalPID extends Command {
    if(Math.abs(power)>maxSpeed){
     power = Math.signum(power)*maxSpeed;
    }
-   SmartDashboard.putNumber("Erro", erro);
-   SmartDashboard.putNumber("Power: ", power);
     motores.arcade(0, -power);
   }
 
