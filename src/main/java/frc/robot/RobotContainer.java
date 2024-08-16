@@ -10,7 +10,7 @@ import frc.robot.commands.autonomo.gyroCommand;
 import frc.robot.commands.teleoperado.catchCommand;
 import frc.robot.commands.teleoperado.intakeCommand;
 import frc.robot.commands.teleoperado.motorCommand;
-import frc.robot.commands.testes.velocityControl;
+//import frc.robot.commands.testes.velocityControl;
 import frc.robot.subsystems.LimelightSubsystem;
 //import frc.robot.commands.testerCommand;
 //import frc.robot.commands.velocityControl;
@@ -88,13 +88,13 @@ public class RobotContainer {
     //limelight
     new JoystickButton(joystick1, JoystickConstants.JoyButtons.get("btY")).toggleOnTrue(
       new SequentialCommandGroup(
-       new BiaxialPID(limelight, m_exampleSubsystem, 0.3, 2.5, 0),
+       new BiaxialPID(limelight, m_exampleSubsystem, 0.3, 2.5, 0, true),
         m_exampleSubsystem.resetOnce()
       ));
     }
     public Command getAutonomousCommand() {
       // An ExampleCommand will run in autonomous
-      Command m_autoCommand = new SequentialAuton(m_exampleSubsystem, limelight, intake);
-      return m_autoCommand;
+      SequentialAuton sequentialAuton = new SequentialAuton(m_exampleSubsystem, limelight, intake);
+      return sequentialAuton;
     }
 }

@@ -24,7 +24,7 @@ public class InitRotation extends Command{
     @Override
     public void execute() {
         isFounded = (tagAnalyzer.tagId().contains(id))?true:false;
-        motion.arcade(0.25, 0);
+        motion.arcade(0.2, 0);
     }
     @Override
     public void end(boolean interrupted) { 

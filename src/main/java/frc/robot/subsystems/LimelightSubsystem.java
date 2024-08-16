@@ -36,6 +36,7 @@ public class LimelightSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Yaw", getAngles().get("yaw"));
     SmartDashboard.putNumber("Pitch", getAngles().get("pitch"));
     SmartDashboard.putNumber("Roll", getAngles().get("roll"));
+    SmartDashboard.putNumber("Distance", getTagPose().get("z"));
   }
 
   @Override

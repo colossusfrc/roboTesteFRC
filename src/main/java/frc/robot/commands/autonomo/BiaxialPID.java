@@ -12,14 +12,16 @@ public class BiaxialPID extends Command {
   private final LimelightSubsystem limelightInfo;
   private final motionProfile motores;
   private final double maxSpeed;
-  private final double alvoY, alvoZ;
+  private double alvoY, alvoZ;
   private PIDController pidY, pidZ;
+  private boolean angle;
 
   public BiaxialPID(LimelightSubsystem limelightInfo,
   motionProfile motores,
   double maxSpeed,
   double alvoY,
-  double alvoZ) {
+  double alvoZ,
+  boolean angle) {
     this.pidY = new PIDController(limelightConstants.kp, limelightConstants.ki, limelightConstants.kd);
     this.pidZ = new PIDController(limelightConstants.kpz, limelightConstants.kiz, limelightConstants.kdz);
     this.motores = motores;
@@ -27,8 +29,12 @@ public class BiaxialPID extends Command {
     this.maxSpeed = maxSpeed;
     this.alvoY = alvoY;
     this.alvoZ = alvoZ;
+    this.angle = angle;
     pidY.setTolerance(limelightConstants.ry);
-    pidZ.setTolerance(limelightConstants.rz);
+    if(angle){
+      pidZ.setTolerance(limelightConstants.rz);
+      pidY.setTolerance(limelightConstants.ry*1.1);
+    }
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(limelightInfo, motores);
   }
@@ -37,17 +43,26 @@ public class BiaxialPID extends Command {
   public void initialize() {
    motores.setMaxOUtput(maxSpeed);
    pidY.reset();
+   pidY.setSetpoint(alvoY);
    pidZ.reset();
+   pidZ.setSetpoint(alvoZ);
   }
 
   @Override
   public void execute() {
     double powerY, powerZ;
+    pidY.calculate(limelightInfo.getTagPose().get("z"), alvoY);
+    pidZ.calculate(limelightInfo.getAngles().get("roll"), alvoZ);
+    SmartDashboard.putNumber("erroY: ", pidY.getPositionError());
+    SmartDashboard.putNumber("erroZ: ", pidZ.getPositionError());
+    double integralZ = (Math.abs(pidZ.getPositionError())<limelightConstants.limitOfAngle)?limelightConstants.kiz:0;
+    pidZ.setI(integralZ);
     powerY = pidY.calculate(limelightInfo.getTagPose().get("z"), alvoY);
-    powerZ = pidZ.calculate(limelightInfo.getAngles().get("roll"), alvoZ);
+    powerZ = (angle)?pidZ.calculate(limelightInfo.getAngles().get("roll"), alvoZ):0.0;
     SmartDashboard.putNumber("erroY: ", pidY.getPositionError());
     SmartDashboard.putNumber("integral:", pidY.getI());
     SmartDashboard.putNumber("potencial: ", pidY.getP());
+    SmartDashboard.putBoolean("Bool: ", isAtSetpoint());
     motores.arcade(powerZ, -powerY);
   }
 
@@ -60,6 +75,9 @@ public class BiaxialPID extends Command {
 
   @Override
   public boolean isFinished() {
-      return (pidY.atSetpoint()&&pidZ.atSetpoint());
+      return ((pidY.atSetpoint()&&pidZ.atSetpoint())||(!limelightInfo.tagId().contains(10.0)));
+  }
+  public boolean isAtSetpoint(){
+    return (angle)?(pidY.atSetpoint()&&pidZ.atSetpoint()):pidY.atSetpoint();
   }
 }

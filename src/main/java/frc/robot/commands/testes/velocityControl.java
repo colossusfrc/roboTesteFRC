@@ -3,7 +3,6 @@ package frc.robot.commands.testes;
 import frc.robot.Constants.velPidTranscedentals;
 import frc.robot.subsystems.intakeSubsystem;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class velocityControl extends Command {
@@ -48,7 +47,6 @@ public class velocityControl extends Command {
    power = baseSpeed+PIDPower;
    power = (Math.abs(power)>velPidTranscedentals.MAX)?Math.signum(power)*velPidTranscedentals.MAX:power;
    m_subsystem.setPower(power);
-   SmartDashboard.putNumber("velocityError", velPID.getPositionError());
   }
 
   @Override

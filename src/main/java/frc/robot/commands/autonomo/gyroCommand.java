@@ -4,7 +4,6 @@ import frc.robot.Constants.gyroPIDConstants;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.motionProfile;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class gyroCommand extends Command {
@@ -22,6 +21,7 @@ public class gyroCommand extends Command {
     this.speedModule = Math.abs(speedModule);
     this.targAngle = targAngle;
     addRequirements(m_subsystem);
+    gyroPID.setTolerance(gyroPIDConstants.range/20);
   }
   /*
    * O controlador PID:
@@ -57,9 +57,6 @@ public class gyroCommand extends Command {
       gyroPID.setI(gyroPIDConstants.ki);
       speed = gyroPID.calculate(m_subsystem.getAngle(), targAngle);
     }
-    SmartDashboard.putNumber("erro", gyroPID.getPositionError());
-    SmartDashboard.putNumber("Integral: ", gyroPID.getI());
-    SmartDashboard.putNumber("Derivativo: ", gyroPID.getD());
     m_subsystem.arcade(-speed, 0);
 }
 
@@ -73,6 +70,6 @@ public class gyroCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return false;
+    return gyroPID.atSetpoint();
   }
 }

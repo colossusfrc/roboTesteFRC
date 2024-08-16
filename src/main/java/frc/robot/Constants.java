@@ -43,7 +43,7 @@ public final class Constants {//encapsulamento das constantes
   //constantes do giroscópio
   public static class gyroPIDConstants{
     public static final double initialAngle = 0;
-    public static final double kp = 0.0415, ki = 0.068, kd = 1.54;
+    public static final double kp = 0.0415, ki = 0.068, kd = 1.89;
     public static final double range = 10;
   }
   //constantes do velocityPID de VELOCIDADE DOS MOTORES DA COLETA
@@ -73,9 +73,11 @@ public final class Constants {//encapsulamento das constantes
   //constatnes da limelight
   public static class limelightConstants{
     public static final String name = "limelight-one";
-    public static final double kp = 1, ki = 0.4, kd = 0.0;
-    public static final double kpz = 0.07, kiz = 0.046, kdz = 0.0064;
-    public static final double ry = 0.1, rz = 1;
+    public static final double kp = 0.993, ki = 0.3, kd = 0.0541;
+    public static final double kpz = 0.0257, kiz = 0.076, kdz = 3.15;
+    public static final double ry = 0.05, rz = 1.0;
+    public static final double limitOfAngle = 13.0,
+    limitOfRange = 0.3;
   }
   public static class tagConstants{
   //A medida está em centímetros
