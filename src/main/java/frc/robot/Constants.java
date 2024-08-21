@@ -14,6 +14,8 @@ public final class Constants {//encapsulamento das constantes
       portas.put("backLeft", 4);
       portas.put("intakeUp", 6);
       portas.put("intakeDown", 5);
+      portas.put("armBase", 7);
+      portas.put("armClct", 8);
     }
   }
   //potência limite dos motores das rodas
@@ -84,5 +86,15 @@ public final class Constants {//encapsulamento das constantes
     public static final double hf = 118,
     hCam = 53;
     public static final double dH = hf - hCam;
+  }
+  public static class armConstatns{
+    public static final double firstOffset = 0.101;
+    public static final double kp = 0.0025, ki = 0.0, kd = 0.0;
+    public static final double range = 5;
+    public static final double integratorRange = 10.0;
+    public static final double catchPosition = -30,
+    deliverPosition = 145,
+    maxPower = 0.6;
+    public static final double timeOfCollect = 2.0;
   }
 }

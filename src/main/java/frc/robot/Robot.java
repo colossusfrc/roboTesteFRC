@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.ag.SequentialAuton;
+import frc.robot.commands.teleoperado.lowerArmIntakeCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -16,7 +17,7 @@ import frc.robot.ag.SequentialAuton;
  * project.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+  private Command m_autonomousCommand, setArm;
   //futuramente, na organização dos comandos do autônomo, essa instância do robotcontainer vai ser mais útil
   private RobotContainer m_robotContainer;
   /**
@@ -66,8 +67,12 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    setArm = m_robotContainer.initArm();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
+    }
+    if(setArm!=null){
+      setArm.schedule();
     }
   }
 
