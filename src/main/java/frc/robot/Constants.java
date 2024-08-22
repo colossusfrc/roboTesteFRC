@@ -89,12 +89,12 @@ public final class Constants {//encapsulamento das constantes
   }
   public static class armConstatns{
     public static final double firstOffset = 0.101;
-    public static final double kp = 0.0025, ki = 0.0, kd = 0.0;
+    public static final double kp = 0.003, ki = 0.0, kd = 0.00008;
     public static final double range = 5;
     public static final double integratorRange = 10.0;
-    public static final double catchPosition = -30,
-    deliverPosition = 145,
-    maxPower = 0.6;
-    public static final double timeOfCollect = 2.0;
+    public static final double catchPosition = -25,
+    deliverPosition = 140,
+    maxPower = 0.8;
+    public static final double timeOfCollect = 3.0;
   }
 }
