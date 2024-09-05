@@ -6,7 +6,6 @@ package frc.robot.commands.teleoperado;
 
 import frc.robot.Constants.armConstatns;
 import frc.robot.subsystems.ArmIntake;
-import frc.robot.subsystems.UpperArmIntake;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,7 +17,7 @@ public class lowerArmIntakeCommand extends Command {
   private final double power;
   private final double targAngle;
   private final boolean analyzePID;
-  private PIDController PIDArm;
+  public PIDController PIDArm;
 
   public lowerArmIntakeCommand(
   ArmIntake armIntake,
@@ -64,5 +63,8 @@ public class lowerArmIntakeCommand extends Command {
    }else{
     return PIDArm.atSetpoint();
    }
+  }
+  public boolean pid(){
+    return PIDArm.atSetpoint();
   }
 }

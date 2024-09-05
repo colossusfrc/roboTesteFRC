@@ -22,7 +22,7 @@ public final class Constants {//encapsulamento das constantes
   public static class CommandConstants{
     //modulo maximo rodas
     public static final double 
-     commandPower = 0.3,
+     commandPower = 0.4,
      spinSpeed = commandPower/1.5;
   }
   //valores específicos do sistema de coleta
@@ -88,13 +88,14 @@ public final class Constants {//encapsulamento das constantes
     public static final double dH = hf - hCam;
   }
   public static class armConstatns{
-    public static final double firstOffset = 0.101;
-    public static final double kp = 0.003, ki = 0.0, kd = 0.00008;
+    public static final double firstOffset = 0.773;
+    public static final double kp = 0.003, ki = 0.0, kd = 0.00005;
     public static final double range = 5;
     public static final double integratorRange = 10.0;
-    public static final double catchPosition = -25,
+    public static final double catchPosition = -20,
     deliverPosition = 140,
-    maxPower = 0.8;
+    maxPower = 0.4,
+    empoweredMaxPower = .6;
     public static final double timeOfCollect = 3.0;
   }
 }

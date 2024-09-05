@@ -29,7 +29,7 @@ public class upperArmIntake extends Command {
 
   @Override
   public void execute() {
-    double kSpeed = (toWait&&Timer.getFPGATimestamp()-firstTime<0.75)?0:speed;
+    double kSpeed = (toWait&&Timer.getFPGATimestamp()-firstTime<1.5)?0:speed;
     intake.setUpperArm(kSpeed);
    }
 
