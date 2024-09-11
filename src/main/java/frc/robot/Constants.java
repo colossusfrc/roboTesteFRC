@@ -7,6 +7,7 @@ public final class Constants {//encapsulamento das constantes
   //relaciona a identificação do hardware com a conexão 
   public static class HardwareMap{
     public static final HashMap<String, Integer> portas = new HashMap<String, Integer>();
+    public static final double encoderScale = Math.PI*(0.1524);
     static{
       portas.put("frontRight", 1);
       portas.put("backRight", 3);
@@ -16,6 +17,8 @@ public final class Constants {//encapsulamento das constantes
       portas.put("intakeDown", 5);
       portas.put("armBase", 7);
       portas.put("armClct", 8);
+      portas.put("leftEnc", 1);
+      portas.put("rightEnc", 2);
     }
   }
   //potência limite dos motores das rodas

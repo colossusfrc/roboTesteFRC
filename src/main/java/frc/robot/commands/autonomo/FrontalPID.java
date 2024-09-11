@@ -4,8 +4,6 @@ import frc.robot.Constants.limelightConstants;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.motionProfile;
 
-import java.util.Scanner;
-
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class FrontalPID extends Command {

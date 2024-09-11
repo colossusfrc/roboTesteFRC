@@ -10,8 +10,12 @@ import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.UpperArmIntake;
 import frc.robot.subsystems.intakeSubsystem;
 import frc.robot.subsystems.motionProfile;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 /*
  * Corpo principal do código
@@ -33,11 +37,16 @@ public class RobotContainer{
   //////////IO module
   protected final Joystick joystick1 = new Joystick(0);
   protected final GenericHID dPad = new GenericHID(0);
+
+  private final SendableChooser<Command> autoChooser;
   //////////estados
   public RobotContainer() {
     m_exampleSubsystem.setDefaultCommand(new motorCommand(m_exampleSubsystem, 
     () -> joystick1.getRawAxis(JoystickConstants.JoyButtons.get("LY"))*CommandConstants.commandPower, 
     () -> joystick1.getRawAxis(JoystickConstants.JoyButtons.get("DX"))*CommandConstants.spinSpeed));
+    
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("chooser", autoChooser);
   }
     public Command getAutonomousCommand() {
       // An ExampleCommand will run in autonomous
@@ -46,5 +55,11 @@ public class RobotContainer{
     }
     public Command initArm(){
       return new lowerArmIntakeCommand(armIntake, 130.0, 0.2, true);
+    }
+    public Command resetEncoders(){
+      return m_exampleSubsystem.resetEncoders();
+    }
+    public Command getAutonomousPathPlanner(){
+      return m_exampleSubsystem.followPathCommand("Example Path");
     }
 }

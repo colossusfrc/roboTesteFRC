@@ -9,13 +9,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class gyroCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final motionProfile m_subsystem;
-  private final LimelightSubsystem limelight;
   private final PIDController gyroPID;
   private double speed, speedModule;
   private final double targAngle;
   //mesmo processo em intake commando, a diferença é que speed é o limite de velocidade e distance é o alvo
   public gyroCommand(motionProfile subsystem, LimelightSubsystem limelight, double speedModule, double targAngle) {
-    this.limelight = limelight;
     gyroPID = new PIDController(gyroPIDConstants.kp, gyroPIDConstants.ki, gyroPIDConstants.kd);
     m_subsystem = subsystem;
     this.speedModule = Math.abs(speedModule);

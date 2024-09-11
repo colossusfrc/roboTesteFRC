@@ -6,9 +6,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.listOfExecutions.triggers;
 
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand, setArm;
+  private Command m_autonomousCommand, setArm, resetEncoders;
   //futuramente, na organização dos comandos do autônomo, essa instância do robotcontainer vai ser mais útil
-  private RobotContainer m_robotContainer;
+  private RobotContainer m_robotContainer; 
   /**
    * chama o contrutor do robotcontainer, que executa uma única vez aquelas funções de inicializaçãod o robõ
    */
@@ -16,6 +16,10 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // instância de robot container, executando o construtor
     m_robotContainer = new triggers();
+    resetEncoders = m_robotContainer.resetEncoders();
+    if(resetEncoders!=null){
+      resetEncoders.schedule();
+    }
   }
 
   /**Executada  durante todos os modos do robô uma vez acada 30ms
