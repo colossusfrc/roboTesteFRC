@@ -2,7 +2,6 @@ package frc.robot;
 
 import java.util.HashMap;
 
-
 public final class Constants {//encapsulamento das constantes
   //relaciona a identificação do hardware com a conexão 
   public static class HardwareMap{
@@ -100,5 +99,6 @@ public final class Constants {//encapsulamento das constantes
     maxPower = 0.4,
     empoweredMaxPower = .6;
     public static final double timeOfCollect = 3.0;
+    public static final double retrationAngle = 130.0;
   }
 }

@@ -25,10 +25,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HardwareMap;
 import frc.robot.Constants.gyroPIDConstants;
-import frc.robot.commands.testes.Acceleration;
-import frc.robot.commands.testes.VelocidadeAbst;
+import frc.robot.commands.testes.loopers.Acceleration;
+import frc.robot.commands.testes.loopers.GenericaVelocidade;
+import frc.robot.commands.testes.loopers.VelocidadeAbst;
 
 public class motionProfile extends SubsystemBase {
+  private final GenericaVelocidade encVelocity;
   private static MotorType kMotorType = MotorType.kBrushed;
   private static IdleMode brake = IdleMode.kBrake;
   private final CANSparkMax[] motors = {
@@ -36,8 +38,6 @@ public class motionProfile extends SubsystemBase {
       new CANSparkMax(HardwareMap.portas.get("backLeft"), kMotorType),
       new CANSparkMax(HardwareMap.portas.get("frontRight"), kMotorType),
       new CANSparkMax(HardwareMap.portas.get("backRight"), kMotorType)};
-  /*private CANSparkMax m_motor1Esquerdo, m_motor2Esquerdo;
-  private CANSparkMax m_motor1Direito, m_motor2Direito;*/
   private DifferentialDrive m_drivetrain;
   private DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.56);
   private VelocidadeAbst leftEncoder, rightEncoder;
@@ -52,22 +52,6 @@ public class motionProfile extends SubsystemBase {
     motors[0].follow(motors[1]);
 
     m_drivetrain = new DifferentialDrive(motors[1], motors[2]);
-    /*m_motor1Esquerdo = new CANSparkMax(HardwareMap.portas.get("frontLeft"), kMotorType);
-    m_motor1Esquerdo.restoreFactoryDefaults();
-
-    m_motor2Esquerdo = new CANSparkMax(HardwareMap.portas.get("backLeft"), kMotorType);
-    m_motor2Esquerdo.restoreFactoryDefaults();
-
-    m_motor1Direito = new CANSparkMax(HardwareMap.portas.get("frontRight"), kMotorType);
-    m_motor1Direito.restoreFactoryDefaults();
-
-    m_motor2Direito = new CANSparkMax(HardwareMap.portas.get("backRight"), kMotorType);
-    m_motor2Direito.restoreFactoryDefaults();
-
-    m_motor2Direito.follow(m_motor1Direito);
-    m_motor1Esquerdo.follow(m_motor2Esquerdo);
-
-    m_drivetrain = new DifferentialDrive(m_motor2Esquerdo, m_motor1Direito);*/
 
     leftEncoder = new VelocidadeAbst(HardwareMap.portas.get("leftEnc"));
     rightEncoder = new VelocidadeAbst(HardwareMap.portas.get("rightEnc"));
@@ -97,6 +81,7 @@ public class motionProfile extends SubsystemBase {
             this
     );
     acceleration = new Acceleration(()->leftEncoder.getRate()*HardwareMap.encoderScale);
+    encVelocity = new GenericaVelocidade(()->leftEncoder.get()*HardwareMap.encoderScale);
   }
 
   public Command resetOnce() {
@@ -111,7 +96,7 @@ public class motionProfile extends SubsystemBase {
     SmartDashboard.putNumber("Angulo", getAngle());
     SmartDashboard.putString("Robot x, y, θ: ", robotPose2d().toString());
     SmartDashboard.putString("Robot xy velocity: ", getChassisSpeeds().toString());
-    SmartDashboard.putNumber("Robot Acceleration: ", acceleration.getAcceleration());
+    SmartDashboard.putNumber("Velocité: ", encVelocity.velocidade());
   }
   public void setMaxOUtput(double max){
    m_drivetrain.setMaxOutput(max);
@@ -129,10 +114,6 @@ public class motionProfile extends SubsystemBase {
     for(CANSparkMax motor : motors){
       motor.setIdleMode(brake);
     }
-    /*m_motor1Direito.setIdleMode(brake);
-    m_motor2Direito.setIdleMode(brake);
-    m_motor1Esquerdo.setIdleMode(brake);
-    m_motor2Esquerdo.setIdleMode(brake);*/
   }
   public double getAngle(){
     double angle;
@@ -196,7 +177,6 @@ public class motionProfile extends SubsystemBase {
     }
     m_drivetrain.tankDrive(power[0], power[1]);
   }
-
   public Command followPathCommand(String PathName){
    PathPlannerPath path = PathPlannerPath.fromPathFile(PathName);
 
