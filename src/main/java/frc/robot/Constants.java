@@ -1,7 +1,6 @@
 package frc.robot;
 
 import java.util.HashMap;
-
 public final class Constants {//encapsulamento das constantes
   //relaciona a identificação do hardware com a conexão 
   public static class HardwareMap{
@@ -24,7 +23,7 @@ public final class Constants {//encapsulamento das constantes
   public static class CommandConstants{
     //modulo maximo rodas
     public static final double 
-     commandPower = 0.4,
+     commandPower = 0.3,
      spinSpeed = commandPower/1.5;
   }
   //valores específicos do sistema de coleta
@@ -36,6 +35,7 @@ public final class Constants {//encapsulamento das constantes
     public static final double time = 1.0;
     public static final double testTime = time + 1;
     public static final double limDistance = 155.0;
+    public static final double intakePower = 1.0;
   }
   //constantes utilizadas pelo PID de POSIÇÃO DOS MOTORES DA COLETA
   public static class TesterTranscedentals{
@@ -45,10 +45,13 @@ public final class Constants {//encapsulamento das constantes
     public static final double kp = 0.05, ki = 0.023, kd = 0.0043, range = 6.0;
   }
   //constantes do giroscópio
+  //aqui estão as constantes utilizadas no autonomo
   public static class gyroPIDConstants{
     public static final double initialAngle = 0;
     public static final double kp = 0.0415, ki = 0.068, kd = 1.89;
     public static final double range = 10;
+    public static final double gyroPower = 0.3;
+    public static final double firstAngle = 45.0, secondAngle = 180.0;
   }
   //constantes do velocityPID de VELOCIDADE DOS MOTORES DA COLETA
   public static class velPidTranscedentals{
@@ -82,13 +85,21 @@ public final class Constants {//encapsulamento das constantes
     public static final double ry = 0.05, rz = 1.0;
     public static final double limitOfAngle = 13.0,
     limitOfRange = 0.3;
+    public static final double[] posicional = {
+      2.5,
+      1.8,
+      0
+    };
   }
+  //constantes relativas à tag (aqui a tag do autonomo está inserida)
   public static class tagConstants{
   //A medida está em centímetros
+    public static final double autonomousTag = 10.0;
     public static final double hf = 118,
     hCam = 53;
     public static final double dH = hf - hCam;
   }
+  //aqui estão algumas constantes relativas aos braços
   public static class armConstatns{
     public static final double firstOffset = 0.773;
     public static final double kp = 0.003, ki = 0.0, kd = 0.00005;
@@ -100,5 +111,8 @@ public final class Constants {//encapsulamento das constantes
     empoweredMaxPower = .6;
     public static final double timeOfCollect = 3.0;
     public static final double retrationAngle = 130.0;
+    public static final double idlePower = 0.2, catchPower = 1, upperPower = 1, retration = 0.2; 
+    //braço superior
+    public static final double upperArmpower = 1, toReverseUpper = -1;
   }
 }

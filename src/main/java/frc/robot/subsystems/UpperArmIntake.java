@@ -18,7 +18,7 @@ public class UpperArmIntake extends SubsystemBase {
   }
   @Override
   public void periodic() {
-    }
+  }
   @Override
   public void simulationPeriodic() {
   }

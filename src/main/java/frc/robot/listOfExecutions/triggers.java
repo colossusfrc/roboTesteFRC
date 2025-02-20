@@ -10,6 +10,8 @@ import frc.robot.commands.teleoperado.catchCommand;
 import frc.robot.commands.teleoperado.intakeCommand;
 
 public class triggers extends armStateselector{
+  //aqui controlamos os demais botões, tais como a ejeção e coleta da nota pela parte superior
+  //e os botões do dPad (aqui chamados de POV) para o contorle do giroscópio.
     public triggers(){
         super();
         configureBindings();

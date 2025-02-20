@@ -1,5 +1,4 @@
 package frc.robot;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -16,7 +15,6 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // instância de robot container, executando o construtor
     m_robotContainer = new triggers();
-    resetEncoders = m_robotContainer.resetEncoders();
     if(resetEncoders!=null){
       resetEncoders.schedule();
     }
@@ -42,24 +40,19 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    //caso queira que o autônomo funcione, troque 'null' por 'm_robotContainer.getAutonomousCommand()'
+    //essa funcao de RobotContainer retorna o aninhamento de comandos
+    m_autonomousCommand = null;
 
-    // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
   }
-
-  /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
     setArm = m_robotContainer.initArm();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
@@ -69,24 +62,20 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {}
 
   @Override
   public void testInit() {
-    // Cancels all running commands at the start of test mode.
+    //impede o robô de fazer qualquer coisa
     CommandScheduler.getInstance().cancelAll();
   }
-  /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
 
-  /** This function is called once when the robot is first started up. */
   @Override
   public void simulationInit() {}
 
-  /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {}
 }

@@ -1,18 +1,19 @@
 {
-  "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 1.1734895937694858,
-      "y": 6.405827590542485
-    },
-    "rotation": -4.573921259900832
-  },
+  "version": "2025.0",
   "command": {
     "type": "sequential",
     "data": {
-      "commands": []
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Example Path"
+          }
+        }
+      ]
     }
   },
+  "resetOdom": true,
   "folder": null,
   "choreoAuto": false
 }

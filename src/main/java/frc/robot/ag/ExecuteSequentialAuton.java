@@ -4,6 +4,9 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.gyroPIDConstants;
+import frc.robot.Constants.intakeConstants;
+import frc.robot.Constants.tagConstants;
 import frc.robot.commands.autonomo.BiaxialPID;
 import frc.robot.commands.autonomo.InitRotation;
 import frc.robot.commands.autonomo.gyroCommand;
@@ -17,17 +20,21 @@ public class ExecuteSequentialAuton extends SequentialCommandGroup{
         super(
           new RepeatCommand(
                new SequentialCommandGroup(
-                   new InitRotation(motion, limelight, 10.0).onlyIf(()->!limelight.tagId().contains(10.0)),
-                    firstPoint
+                   new InitRotation(motion, limelight, tagConstants.autonomousTag)
+                         .onlyIf(
+                              ()->!limelight.tagId().contains(tagConstants.autonomousTag)),
+                               firstPoint
                )).onlyWhile(()->!stBoolean.get()),
              motion.resetOnce(),
-              new gyroCommand(motion, limelight, 0.3, 45),
-               new intakeCommand(intake, 1.0, true),
+              new gyroCommand(motion, limelight, gyroPIDConstants.gyroPower, gyroPIDConstants.firstAngle),
+               new intakeCommand(intake, intakeConstants.intakePower, true),
                 new RepeatCommand(
                new SequentialCommandGroup(
-                   new InitRotation(motion, limelight, 10.0).onlyIf(()->!limelight.tagId().contains(10.0)),
-                    secondPoint
+                   new InitRotation(motion, limelight, tagConstants.autonomousTag)
+                         .onlyIf(
+                              ()->!limelight.tagId().contains(tagConstants.autonomousTag)),
+                               secondPoint
                )).onlyWhile(()->!stBoolean.get()),
-                 new gyroCommand(motion, limelight, 0.3, 180));
+                 new gyroCommand(motion, limelight, gyroPIDConstants.gyroPower, gyroPIDConstants.secondAngle));
      }
     }

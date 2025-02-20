@@ -33,5 +33,4 @@ public class InitRotation extends Command{
     public boolean isFinished() {
         return isFounded;
     }
-    
 }

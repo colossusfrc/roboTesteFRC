@@ -1,6 +1,7 @@
 package frc.robot.commands.autonomo;
 
 import frc.robot.Constants.limelightConstants;
+import frc.robot.Constants.tagConstants;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.motionProfile;
 import edu.wpi.first.math.controller.PIDController;
@@ -75,7 +76,7 @@ public class BiaxialPID extends Command {
 
   @Override
   public boolean isFinished() {
-      return ((pidY.atSetpoint()&&pidZ.atSetpoint())||(!limelightInfo.tagId().contains(10.0)));
+      return ((pidY.atSetpoint()&&pidZ.atSetpoint())||(!limelightInfo.tagId().contains(tagConstants.autonomousTag)));
   }
   public boolean isAtSetpoint(){
     return (angle)?(pidY.atSetpoint()&&pidZ.atSetpoint()):pidY.atSetpoint();

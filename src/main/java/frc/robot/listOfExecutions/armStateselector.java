@@ -13,6 +13,7 @@ import frc.robot.commands.teleoperado.lowerArmIntakeCommand;
 import frc.robot.commands.teleoperado.upperArmIntake;
 
 public class armStateselector extends RobotContainer{
+  //aqui, numa relaçao de herança, controlamos as possíveis posições do braço alto por uma lógica de FSM
     private enum Estado{
         pega,
         guarda,
@@ -36,13 +37,15 @@ public class armStateselector extends RobotContainer{
         Map.ofEntries(
           Map.entry(Estado.guarda,
           new ParallelDeadlineGroup(
-           new upperArmIntake(super.upperArmIntake, 1, true, true, true),
+           new upperArmIntake(super.upperArmIntake, armConstatns.upperPower, true, true, true),
             new lowerArmIntakeCommand(super.armIntake, armConstatns.deliverPosition, armConstatns.empoweredMaxPower, false))
           ),
-          Map.entry(Estado.pega, new lowerArmIntakeCommand(super.armIntake, armConstatns.catchPosition, armConstatns.maxPower, false).raceWith(
-          new upperArmIntake(super.upperArmIntake, 1, true, false, true)
+          Map.entry(Estado.pega, new lowerArmIntakeCommand(super.armIntake, armConstatns.catchPosition, armConstatns.maxPower, false)
+          .raceWith(
+          new upperArmIntake(super.upperArmIntake, armConstatns.catchPower, true, false, true)
         )),
-          Map.entry(Estado.idle, new lowerArmIntakeCommand(super.armIntake, 130.0, 0.2, true)) ), this::toGetState);
+          Map.entry(Estado.idle, new lowerArmIntakeCommand(super.armIntake, armConstatns.retrationAngle, armConstatns.retration, true)) ),
+           this::toGetState);
       
       new JoystickButton(super.joystick1, JoystickConstants.JoyButtons.get("btY")).toggleOnTrue(
        stateCommand
@@ -52,10 +55,10 @@ public class armStateselector extends RobotContainer{
         );
       //braço alto
       new JoystickButton(super.joystick1, JoystickConstants.JoyButtons.get("btB")).toggleOnTrue(
-        new upperArmIntake(super.upperArmIntake, 1.0, false, false, false)
+        new upperArmIntake(super.upperArmIntake, armConstatns.upperArmpower, false, false, false)
         );
       new JoystickButton(super.joystick1, JoystickConstants.JoyButtons.get("leftTrigger")).toggleOnTrue(
-        new upperArmIntake(super.upperArmIntake, -1.0, false, false, false)
+        new upperArmIntake(super.upperArmIntake, armConstatns.toReverseUpper, false, false, false)
         );
     }
 }
